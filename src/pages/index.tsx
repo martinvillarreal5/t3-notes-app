@@ -5,7 +5,7 @@ import Layout from "~/components/layout";
 import Link from "next/link";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
 
   return (
     <>
@@ -13,14 +13,21 @@ const Home: NextPage = () => {
         <title>T3 Notes App</title>
       </Head>
       <Layout home>
-        <Link href={"/login"}>
-          <p className="pb-1 text-2xl text-white underline">Account</p>
-        </Link>
-        {sessionData?.user !== undefined && (
-          <Link href={"/folders"}>
-            <p className="pb-1 text-2xl text-white underline">Your Folders</p>
-          </Link>
+        {status === "loading" && <h2>Loading...</h2>}
+        {status === "authenticated" && (
+          <>
+            <Link href={"/login"}>
+              <p className="pb-1 text-2xl text-white underline">Account</p>
+            </Link>
+
+            <Link href={"/folders"}>
+              <p className="pb-1 text-2xl text-white underline">Your Folders</p>
+            </Link>
+          </>
         )}
+        {/*  {sessionData?.user !== undefined && (
+          
+        )} */}
       </Layout>
     </>
   );
