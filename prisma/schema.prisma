@@ -72,12 +72,13 @@ model Folder {
     title           String
     user            User     @relation(fields: [userId], references: [id])
     userId          String
-    notes           Note[]    
+    notes           Note[]   // Find a way to limit the amount of notes a folder can have? 
     parentFolderId  String?
-    parentFolder    Folder?  @relation("FolderHierarchy", fields: [parentFolderId], references: [id])
+    parentFolder    Folder?  @relation("FolderHierarchy", fields: [parentFolderId], references: [id], onDelete: Cascade)
     subFolders      Folder[] @relation("FolderHierarchy")
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
+    // Maybe add somthing like a depth field, which cant be higher than a set number
 }
 
 
@@ -85,8 +86,8 @@ model Note {
     id         String     @id @default(cuid())
     title      String
     content    String
-    folder     Folder     @relation(fields: [folderId], references: [id])
-    folderId   String
+    folderId   String?
+    folder     Folder?     @relation(fields: [folderId], references: [id], onDelete: Cascade)
     createdAt  DateTime   @default(now())
     updatedAt  DateTime   @updatedAt
 }
