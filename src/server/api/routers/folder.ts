@@ -38,6 +38,30 @@ export const folderRouter = createTRPCRouter({
         },
       });
     }),
+  getByIdWithSubfolders: protectedProcedure
+    .input(z.object({ folderId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.folder.findFirst({
+        where: {
+          id: input.folderId,
+          userId: ctx.session.user.id,
+        },
+        include: {
+          subFolders: true,
+        },
+      });
+    }),
+  getFoldersTree: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.folder.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        id: true,
+        parentFolderId: true,
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({ title: z.string(), parentFolderId: z.string().optional() })
@@ -51,38 +75,14 @@ export const folderRouter = createTRPCRouter({
         },
       });
     }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.folder.deleteMany({
+        where: {
+          id: input.id,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });
-
-/*
-Prisma doesnt have suport for a includeRecursive-like query for one to many self relating tables
-Dynamically fetch the 'depth' number of levels for subfolders property. 
-TODO Check type safety 
-TODO Adap method below to fetch the Top-Level Folders 
-TODO and only return titles and ids for tree visualisation
-? A
-getWithSubfolders: protectedProcedure
-    .input(z.object({ treeNodeId: z.string(), depth: z.number() }))
-    .query(({ ctx, input }) => {
-
-      let includeObject: any = {
-          include: {subfolders: true}
-      }
-
-      let pointer = includeObject.include;
-
-      for (let i = 0; i < depth - 1; i++) {
-          pointer.children = {include: {subfolders: true}};
-          pointer = pointer.children.include;
-      }
-
-      return ctx.prisma.folder.findUnique({
-          where: {
-              id: treeNodeId
-              // ! userId: ctx.session.user.id, 
-              // ! findUnique doesnt support non unique fields, like userId, in 'where' query
-              // ? Use firstFirst instead?
-          },
-          include: includeObject.include
-    });
-
-*/
