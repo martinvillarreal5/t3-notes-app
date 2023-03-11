@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+import { arrayToTree } from "performant-array-to-tree";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const folderRouter = createTRPCRouter({
@@ -51,8 +51,8 @@ export const folderRouter = createTRPCRouter({
         },
       });
     }),
-  getFoldersTree: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.folder.findMany({
+  getFoldersTree: protectedProcedure.query(async ({ ctx }) => {
+    const flatArray = await ctx.prisma.folder.findMany({
       where: {
         userId: ctx.session.user.id,
       },
@@ -61,6 +61,7 @@ export const folderRouter = createTRPCRouter({
         parentFolderId: true,
       },
     });
+    return arrayToTree(flatArray, { parentId: "parentFolderId" });
   }),
   create: protectedProcedure
     .input(
