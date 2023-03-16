@@ -36,7 +36,12 @@ export default function Layout({
         </div>
       </div>
 
-      <main className="container mx-auto flex grow flex-col">{children}</main>
+      <main
+        className="container mx-auto flex grow flex-col 
+      px-2 sm:px-4"
+      >
+        {children}
+      </main>
       <footer className="container mx-auto">
         {!home && (
           <Link href="/">
