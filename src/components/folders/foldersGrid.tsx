@@ -20,9 +20,10 @@ const FoldersGrid = ({ folders }: folderGridProps) => {
         <Link
           href={`/folders/${folder.id}`}
           key={folder.id}
-          className="btn-outline btn col-span-1 h-fit p-0 normal-case"
+          className="btn-outline btn col-span-1
+          p-1 normal-case"
         >
-          <p className="my-1 text-xs min-[450px]:text-sm  sm:text-sm md:text-base lg:text-lg">
+          <p className=" my-1 truncate text-xs min-[450px]:text-sm  sm:text-sm md:text-base lg:text-lg">
             {folder.title}
           </p>
         </Link>
