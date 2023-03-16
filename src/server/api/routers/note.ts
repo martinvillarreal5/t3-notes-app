@@ -6,14 +6,14 @@ export const noteRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.note.findMany({
       where: {
-        folder: { userId: ctx.session.user.id },
+        userId: ctx.session.user.id,
       },
     });
   }),
   getAllTopLevel: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.note.findMany({
       where: {
-        folder: { userId: ctx.session.user.id },
+        userId: ctx.session.user.id,
         folderId: null,
       },
     });
@@ -23,7 +23,7 @@ export const noteRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.prisma.note.findMany({
         where: {
-          folder: { userId: ctx.session.user.id },
+          userId: ctx.session.user.id,
           folderId: input.folderId,
         },
       });
@@ -33,7 +33,7 @@ export const noteRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.prisma.note.findFirst({
         where: {
-          folder: { userId: ctx.session.user.id },
+          userId: ctx.session.user.id,
           id: input.noteId,
         },
       });
@@ -41,16 +41,17 @@ export const noteRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        title: z.string(),
         content: z.string(),
+        title: z.string().optional(),
         folderId: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.note.create({
         data: {
+          userId: ctx.session.user.id,
+          content: input.content,
           title: input.title,
-          content: input.title,
           folderId: input.folderId,
         },
       });
