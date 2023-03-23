@@ -43,7 +43,6 @@ export const noteRouter = createTRPCRouter({
       z.object({
         content: z.string(),
         title: z.string().optional(),
-        folderId: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -52,7 +51,24 @@ export const noteRouter = createTRPCRouter({
           userId: ctx.session.user.id,
           content: input.content,
           title: input.title,
-          folderId: input.folderId,
+        },
+      });
+    }),
+  createFolderNote: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        title: z.string().optional(),
+        folderId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.note.create({
+        data: {
+          userId: ctx.session.user.id,
+          content: input.content,
+          title: input.title,
+          folder: { connect: { id: input.folderId } },
         },
       });
     }),
