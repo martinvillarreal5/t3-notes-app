@@ -8,7 +8,9 @@ type folderGridProps = {
 const FoldersGrid = ({ folders }: folderGridProps) => {
   return (
     <div
-      className="grid grid-cols-4 gap-2
+      className="grid 
+        grid-cols-4 gap-2
+        min-[364px]:grid-cols-5
         xs:grid-cols-5 
         sm:grid-cols-6 
         md:grid-cols-6 md:gap-4
@@ -20,10 +22,16 @@ const FoldersGrid = ({ folders }: folderGridProps) => {
         <Link
           href={`/folders/${folder.id}`}
           key={folder.id}
-          className="btn-outline btn col-span-1
-          p-1 normal-case"
+          className="folder	btn-sm btn 
+          items-end justify-start border-0 
+          px-1 py-1 normal-case shadow-xl
+          min-[500px]:btn-md min-[500px]:px-2 "
         >
-          <p className=" my-1 truncate text-xs min-[450px]:text-sm  sm:text-sm md:text-base lg:text-lg">
+          <p
+            className="m-0 truncate 
+          text-xs text-base-content 
+          min-[500px]:text-sm sm:text-sm md:text-base xl:text-lg"
+          >
             {folder.title}
           </p>
         </Link>

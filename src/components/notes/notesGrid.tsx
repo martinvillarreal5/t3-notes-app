@@ -19,8 +19,22 @@ const NotesGrid = ({ notes }: notesGridProps) => {
         2xl:grid-cols-6"
       >
         {notes.map((note) => (
-          <div className="h-96 border p-2" key={note.id}>
-            <p>{note.content}</p>
+          <div
+            //sm:h-72 md:h-96 h-60
+            className="h-[11rem] bg-neutral p-2 shadow-xl
+            md:h-[13rem]
+            "
+            key={note.id}
+          >
+            <p
+              //overflow-hidden  text-ellipsis
+              className=" break-words
+            text-sm line-clamp-[8] md:text-base
+            "
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {note.content}
+            </p>
           </div>
         ))}
       </div>
