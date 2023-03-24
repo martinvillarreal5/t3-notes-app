@@ -31,7 +31,7 @@ export const folderRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ folderId: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.folder.findFirst({
+      return ctx.prisma.folder.findFirstOrThrow({
         where: {
           id: input.folderId,
           userId: ctx.session.user.id,
@@ -41,7 +41,7 @@ export const folderRouter = createTRPCRouter({
   getByIdWithSubfolders: protectedProcedure
     .input(z.object({ folderId: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.folder.findFirst({
+      return ctx.prisma.folder.findFirstOrThrow({
         where: {
           id: input.folderId,
           userId: ctx.session.user.id,
