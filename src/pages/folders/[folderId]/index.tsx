@@ -1,16 +1,18 @@
 import { type NextPage } from "next";
+import { useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Layout from "~/components/layout";
 import { api } from "~/utils/api";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import DeleteButton from "~/components/buttons/deleteButton";
+import {
+  FolderPlusIcon,
+  FilePlusIcon,
+  Trash2Icon as TrashIcon,
+} from "lucide-react";
 import FoldersGrid from "~/components/folders/foldersGrid";
-import { useState } from "react";
-import CreateFolderIcon from "~/components/Icons/createFolderIcon";
 import CreateFolderModal from "~/components/folders/createFolderModal";
-import CreateNoteIcon from "~/components/Icons/createNoteIcon";
 import CreateNoteModal from "~/components/notes/createNoteModal";
 import NotesGrid from "~/components/notes/notesGrid";
 
@@ -24,8 +26,9 @@ const Folder: NextPage = () => {
 
   const {
     data: folder,
-    isLoading,
-    refetch,
+    isLoading: isLoadingFolder,
+    refetch: refetchFolder,
+    isSuccess: isSuccessFolder,
   } = api.folder.getByIdWithSubfolders.useQuery(
     { folderId: folderId },
     { enabled: sessionData?.user !== undefined }
@@ -34,6 +37,7 @@ const Folder: NextPage = () => {
   const {
     data: notes,
     isLoading: isLoadingNotes,
+    isSuccess: isSuccessNotes,
     refetch: refetchNotes,
   } = api.note.getByFolderId.useQuery(
     { folderId: folderId },
@@ -47,7 +51,7 @@ const Folder: NextPage = () => {
   const createSubFolder = api.folder.create.useMutation({
     onSuccess: () => {
       void setIsFolderModalOpen(false);
-      void refetch();
+      void refetchFolder();
     },
   });
 
@@ -99,16 +103,16 @@ const Folder: NextPage = () => {
 
       <div className="flex flex-row items-end gap-2 pb-3	">
         <h2 className=" text-2xl sm:text-3xl">
-          {folder?.title || "Loading?.."}
+          {folder?.title || "Loading.."}
         </h2>
-        {folder && (
+        {sessionData?.user !== undefined && isSuccessFolder && (
           <>
             <button
-              className="btn-ghost btn-square btn-sm btn"
               title="Create Folder"
+              className="btn-square btn-sm btn"
               onClick={() => setIsFolderModalOpen(true)}
             >
-              <CreateFolderIcon />
+              <FolderPlusIcon />
             </button>
             <CreateFolderModal
               isOpen={isFolderModalOpen}
@@ -117,30 +121,35 @@ const Folder: NextPage = () => {
             />
             <button
               title="Create Note"
-              className="btn-ghost btn-square btn-sm btn"
+              className="btn-square btn-sm btn"
               onClick={() => setIsNoteModalOpen(true)}
             >
-              <CreateNoteIcon />
+              <FilePlusIcon />
             </button>
             <CreateNoteModal
               isOpen={isNoteModalOpen}
               setIsOpen={setIsNoteModalOpen}
               createFunction={createNoteHandler}
             />
-            <DeleteButton
-              className="btn-ghost btn-square btn-sm btn"
-              deleteFunction={deleteFolderHandler}
-              idToDelete={folder.id}
-            />
+            <button
+              title="Delete Folder"
+              className="btn-square btn-sm btn"
+              onClick={() => deleteFolderHandler(folder.id)}
+            >
+              <TrashIcon />
+            </button>
           </>
         )}
       </div>
-      {folder?.subFolders && folder.subFolders.length > 0 && (
+      {isLoadingFolder && <p className="py-4 text-2xl ">Loading Sub-Folders</p>}
+      {isSuccessFolder && folder.subFolders.length > 0 ? (
         <FoldersGrid folders={folder.subFolders} />
+      ) : (
+        <p className=" text-sm">You dont have any folder yet.</p>
       )}
       <div className="divider my-1 sm:my-2"></div>
       {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
-      {notes && notes.length > 0 ? (
+      {isSuccessNotes && notes.length > 0 ? (
         <NotesGrid notes={notes} />
       ) : (
         <p className="grow pb-1 text-sm">You dont have any note yet.</p>

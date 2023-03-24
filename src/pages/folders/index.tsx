@@ -9,10 +9,10 @@ import {
 import FoldersGrid from "~/components/folders/foldersGrid";
 import NotesGrid from "~/components/notes/notesGrid";
 import { useState } from "react";
-import CreateFolderIcon from "~/components/Icons/createFolderIcon";
-import CreateNoteIcon from "~/components/Icons/createNoteIcon";
 import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
+
+import { FolderPlusIcon, HomeIcon, FilePlusIcon } from "lucide-react";
 
 //type Folder = RouterOutputs["folder"]["getAll"][0]; // Folder Type
 
@@ -26,6 +26,7 @@ const Folders: NextPage = () => {
   const {
     data: folders,
     isLoading: isLoadingFolders,
+    isSuccess: isSuccessFolders,
     refetch: refetchFolders,
   } = api.folder.getAllTopLevel.useQuery(
     undefined, // no input
@@ -82,16 +83,17 @@ const Folders: NextPage = () => {
       <Head>
         <title>T3 Notes App</title>
       </Head>
-      <div className="flex flex-row items-end gap-2 pb-3">
+      <div className="flex flex-row items-center gap-2 pb-3">
+        <HomeIcon />
         <h2 className="text-2xl sm:text-3xl">Folders</h2>
         {sessionData?.user !== undefined && (
           <>
             <button
-              className="btn-ghost btn-square btn-sm btn"
+              className="btn-square btn-sm btn"
               title="Create Folder"
               onClick={() => setIsFolderModalOpen(true)}
             >
-              <CreateFolderIcon />
+              <FolderPlusIcon />
             </button>
             <CreateFolderModal
               isOpen={isFolderModalOpen}
@@ -100,10 +102,10 @@ const Folders: NextPage = () => {
             />
             <button
               title="Create Note"
-              className="btn-ghost btn-square btn-sm btn"
+              className="btn-square btn-sm btn"
               onClick={() => setIsNoteModalOpen(true)}
             >
-              <CreateNoteIcon />
+              <FilePlusIcon />
             </button>
             <CreateNoteModal
               isOpen={isNoteModalOpen}
@@ -114,7 +116,10 @@ const Folders: NextPage = () => {
         )}
       </div>
       {isLoadingFolders && <p className="py-4 text-2xl ">Loading Folders</p>}
-      {folders && folders.length > 0 ? (
+      {!isSuccessFolders && (
+        <p className="py-4 text-2xl ">An error ocurred fetching Folders</p>
+      )}
+      {isSuccessFolders && folders.length > 0 ? (
         <FoldersGrid folders={folders} />
       ) : (
         <p className=" text-sm">You dont have any folder yet.</p>
