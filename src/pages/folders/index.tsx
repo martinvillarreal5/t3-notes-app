@@ -12,7 +12,11 @@ import { useState } from "react";
 import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
 
-import { FolderPlusIcon, HomeIcon, FilePlusIcon } from "lucide-react";
+import {
+  FolderPlus as FolderPlusIcon,
+  Home as HomeIcon,
+  FilePlus as FilePlusIcon,
+} from "lucide-react";
 
 //type Folder = RouterOutputs["folder"]["getAll"][0]; // Folder Type
 
@@ -36,6 +40,7 @@ const Folders: NextPage = () => {
   const {
     data: notes,
     isLoading: isLoadingNotes,
+    isSuccess: isSuccessNotes,
     refetch: refetchNotes,
   } = api.note.getAllTopLevel.useQuery(undefined, {
     enabled: sessionData?.user !== undefined,
@@ -79,60 +84,62 @@ const Folders: NextPage = () => {
   };
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>T3 Notes App</title>
       </Head>
-      <div className="flex flex-row items-center gap-2 pb-3">
-        <HomeIcon />
-        <h2 className="text-2xl sm:text-3xl">Folders</h2>
-        {sessionData?.user !== undefined && (
-          <>
-            <button
-              className="btn-square btn-sm btn"
-              title="Create Folder"
-              onClick={() => setIsFolderModalOpen(true)}
-            >
-              <FolderPlusIcon />
-            </button>
-            <CreateFolderModal
-              isOpen={isFolderModalOpen}
-              setIsOpen={setIsFolderModalOpen}
-              createFunction={createFolderHandler}
-            />
-            <button
-              title="Create Note"
-              className="btn-square btn-sm btn"
-              onClick={() => setIsNoteModalOpen(true)}
-            >
-              <FilePlusIcon />
-            </button>
-            <CreateNoteModal
-              isOpen={isNoteModalOpen}
-              setIsOpen={setIsNoteModalOpen}
-              createFunction={createNoteHandler}
-            />
-          </>
+      <Layout>
+        <div className="flex flex-row items-center gap-2 pb-3">
+          <HomeIcon />
+          <h2 className="text-2xl sm:text-3xl">Folders</h2>
+          {sessionData?.user !== undefined && (
+            <>
+              <button
+                className="btn-square btn-sm btn"
+                title="Create Folder"
+                onClick={() => setIsFolderModalOpen(true)}
+              >
+                <FolderPlusIcon />
+              </button>
+              <CreateFolderModal
+                isOpen={isFolderModalOpen}
+                setIsOpen={setIsFolderModalOpen}
+                createFunction={createFolderHandler}
+              />
+              <button
+                title="Create Note"
+                className="btn-square btn-sm btn"
+                onClick={() => setIsNoteModalOpen(true)}
+              >
+                <FilePlusIcon />
+              </button>
+              <CreateNoteModal
+                isOpen={isNoteModalOpen}
+                setIsOpen={setIsNoteModalOpen}
+                createFunction={createNoteHandler}
+              />
+            </>
+          )}
+        </div>
+        {isLoadingFolders && <p className="py-4 text-2xl ">Loading Folders</p>}
+        {!isSuccessFolders && (
+          <p className="py-4 text-2xl ">An error ocurred fetching Folders</p>
         )}
-      </div>
-      {isLoadingFolders && <p className="py-4 text-2xl ">Loading Folders</p>}
-      {!isSuccessFolders && (
-        <p className="py-4 text-2xl ">An error ocurred fetching Folders</p>
-      )}
-      {isSuccessFolders && folders.length > 0 ? (
-        <FoldersGrid folders={folders} />
-      ) : (
-        <p className=" text-sm">You dont have any folder yet.</p>
-      )}
-      <div className="divider my-1 sm:my-2"></div>
+        {isSuccessFolders && folders.length > 0 ? (
+          <FoldersGrid folders={folders} />
+        ) : (
+          <p className=" text-sm">You dont have any folder yet.</p>
+        )}
+        <div className="divider my-1 sm:my-2"></div>
 
-      {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
-      {notes && notes.length > 0 ? (
-        <NotesGrid notes={notes} />
-      ) : (
-        <p className="pb-1 text-sm">You dont have any note yet.</p>
-      )}
-    </Layout>
+        {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
+        {isSuccessNotes && notes.length > 0 ? (
+          <NotesGrid notes={notes} />
+        ) : (
+          <p className="pb-1 text-sm">You dont have any note yet.</p>
+        )}
+      </Layout>
+    </>
   );
 };
 

@@ -7,9 +7,9 @@ import { useSession } from "next-auth/react";
 import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import {
-  FolderPlusIcon,
-  FilePlusIcon,
-  Trash2Icon as TrashIcon,
+  FolderPlus as FolderPlusIcon,
+  FilePlus as FilePlusIcon,
+  Trash2 as TrashIcon,
 } from "lucide-react";
 import FoldersGrid from "~/components/folders/foldersGrid";
 import CreateFolderModal from "~/components/folders/createFolderModal";
@@ -96,76 +96,79 @@ const Folder: NextPage = () => {
   };
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>T3 Notes App</title>
       </Head>
-
-      <div className="flex flex-row items-end gap-2 pb-3	">
-        <h2 className=" text-2xl sm:text-3xl">
-          {folder?.title || "Loading.."}
-        </h2>
-        {sessionData?.user !== undefined && isSuccessFolder && (
-          <>
-            <button
-              title="Create Folder"
-              className="btn-square btn-sm btn"
-              onClick={() => setIsFolderModalOpen(true)}
-            >
-              <FolderPlusIcon />
-            </button>
-            <CreateFolderModal
-              isOpen={isFolderModalOpen}
-              setIsOpen={setIsFolderModalOpen}
-              createFunction={createSubFolderHandler}
-            />
-            <button
-              title="Create Note"
-              className="btn-square btn-sm btn"
-              onClick={() => setIsNoteModalOpen(true)}
-            >
-              <FilePlusIcon />
-            </button>
-            <CreateNoteModal
-              isOpen={isNoteModalOpen}
-              setIsOpen={setIsNoteModalOpen}
-              createFunction={createNoteHandler}
-            />
-            <button
-              title="Delete Folder"
-              className="btn-square btn-sm btn"
-              onClick={() => deleteFolderHandler(folder.id)}
-            >
-              <TrashIcon />
-            </button>
-          </>
+      <Layout>
+        <div className="flex flex-row items-end gap-2 pb-3	">
+          <h2 className=" text-2xl sm:text-3xl">
+            {folder?.title || "Loading.."}
+          </h2>
+          {sessionData?.user !== undefined && isSuccessFolder && (
+            <>
+              <button
+                title="Create Folder"
+                className="btn-square btn-sm btn"
+                onClick={() => setIsFolderModalOpen(true)}
+              >
+                <FolderPlusIcon />
+              </button>
+              <CreateFolderModal
+                isOpen={isFolderModalOpen}
+                setIsOpen={setIsFolderModalOpen}
+                createFunction={createSubFolderHandler}
+              />
+              <button
+                title="Create Note"
+                className="btn-square btn-sm btn"
+                onClick={() => setIsNoteModalOpen(true)}
+              >
+                <FilePlusIcon />
+              </button>
+              <CreateNoteModal
+                isOpen={isNoteModalOpen}
+                setIsOpen={setIsNoteModalOpen}
+                createFunction={createNoteHandler}
+              />
+              <button
+                title="Delete Folder"
+                className="btn-square btn-sm btn"
+                onClick={() => deleteFolderHandler(folder.id)}
+              >
+                <TrashIcon />
+              </button>
+            </>
+          )}
+        </div>
+        {isLoadingFolder && (
+          <p className="py-4 text-2xl ">Loading Sub-Folders</p>
         )}
-      </div>
-      {isLoadingFolder && <p className="py-4 text-2xl ">Loading Sub-Folders</p>}
-      {isSuccessFolder && folder.subFolders.length > 0 ? (
-        <FoldersGrid folders={folder.subFolders} />
-      ) : (
-        <p className=" text-sm">You dont have any folder yet.</p>
-      )}
-      <div className="divider my-1 sm:my-2"></div>
-      {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
-      {isSuccessNotes && notes.length > 0 ? (
-        <NotesGrid notes={notes} />
-      ) : (
-        <p className="grow pb-1 text-sm">You dont have any note yet.</p>
-      )}
-      {folder?.parentFolderId && (
+        {isSuccessFolder && folder.subFolders.length > 0 ? (
+          <FoldersGrid folders={folder.subFolders} />
+        ) : (
+          <p className=" text-sm">You dont have any folder yet.</p>
+        )}
+        <div className="divider my-1 sm:my-2"></div>
+        {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
+        {isSuccessNotes && notes.length > 0 ? (
+          <NotesGrid notes={notes} />
+        ) : (
+          <p className="grow pb-1 text-sm">You dont have any note yet.</p>
+        )}
+        {folder?.parentFolderId && (
+          <p className="py-2 text-xl underline">
+            <Link href={`/folders/${folder.parentFolderId}`}>
+              {`← Back to parent folder`}{" "}
+            </Link>
+          </p>
+        )}
+        {/* TODO get parent folder title with an include in the prisma query */}
         <p className="py-2 text-xl underline">
-          <Link href={`/folders/${folder.parentFolderId}`}>
-            {`← Back to parent folder`}{" "}
-          </Link>
+          <Link href="/folders">← Back to folders</Link>
         </p>
-      )}
-      {/* TODO get parent folder title with an include in the prisma query */}
-      <p className="py-2 text-xl underline">
-        <Link href="/folders">← Back to folders</Link>
-      </p>
-    </Layout>
+      </Layout>
+    </>
   );
 };
 

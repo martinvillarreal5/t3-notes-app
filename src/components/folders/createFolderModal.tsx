@@ -8,12 +8,12 @@ type ModalProps = {
   parentTitle?: string;
 };
 
-export default function CreateFolderModal({
+const CreateFolderModal = ({
   isOpen,
   setIsOpen,
   createFunction,
   parentTitle,
-}: ModalProps) {
+}: ModalProps) => {
   const [folderTitle, setFolderTitle] = useState("");
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -60,4 +60,6 @@ export default function CreateFolderModal({
       </form>
     </Modal>
   );
-}
+};
+
+export default CreateFolderModal;

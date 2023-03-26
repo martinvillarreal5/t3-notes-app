@@ -7,12 +7,12 @@ type ModalProps = {
   folderTitle?: string;
 };
 
-export default function CreateNoteModal({
+const CreateNoteModal = ({
   isOpen,
   setIsOpen,
   createFunction,
   folderTitle,
-}: ModalProps) {
+}: ModalProps) => {
   const [noteContent, setNoteContent] = useState("");
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -57,4 +57,6 @@ export default function CreateNoteModal({
       </form>
     </Modal>
   );
-}
+};
+
+export default CreateNoteModal;
