@@ -5,7 +5,7 @@ import Layout from "~/components/layout";
 import Link from "next/link";
 
 const Home: NextPage = () => {
-  const { data: sessionData, status } = useSession();
+  const { status } = useSession();
 
   return (
     <>
@@ -14,12 +14,14 @@ const Home: NextPage = () => {
       </Head>
       <Layout home>
         {status === "loading" && <h2>Loading...</h2>}
+
+        <Link href={"/login"}>
+          <p className="pb-1 text-2xl text-white underline">
+            {status === "authenticated" ? "Account" : "Log in"}
+          </p>
+        </Link>
         {status === "authenticated" && (
           <>
-            <Link href={"/login"}>
-              <p className="pb-1 text-2xl text-white underline">Account</p>
-            </Link>
-
             <Link href={"/folders"}>
               <p className="pb-1 text-2xl text-white underline">Your Folders</p>
             </Link>

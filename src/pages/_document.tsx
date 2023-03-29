@@ -9,7 +9,7 @@ export default function Document() {
       //data-theme="business"
     >
       <Head />
-      <body>
+      <body className="bg-base-300 ">
         <Main />
         <NextScript />
       </body>

@@ -1,5 +1,5 @@
 import { type Note } from "@prisma/client";
-import Link from "next/link";
+//import Link from "next/link";
 
 type notesGridProps = {
   notes: Note[];
@@ -10,13 +10,13 @@ const NotesGrid = ({ notes }: notesGridProps) => {
     <div className="grow">
       <div
         className="grid grid-cols-2
-        gap-2 
+        gap-2 pb-4 
         xs:grid-cols-2 
-        sm:grid-cols-3 md:grid-cols-3
-        md:gap-4 
-        lg:grid-cols-4 
-        xl:grid-cols-5
-        2xl:grid-cols-6"
+        sm:grid-cols-3 
+        md:grid-cols-3 md:gap-3 
+        lg:grid-cols-3 
+        xl:grid-cols-3
+        2xl:grid-cols-4"
       >
         {notes.map((note) => (
           <div

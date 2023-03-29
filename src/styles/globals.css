@@ -2,25 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+.testingbtnclass {
+  @apply btn;
+}
+
 .folder {
+  display: flex;
   border-width: 0px;
   text-transform: none;
   position: relative;
   border-radius: 0 var(--rounded-btn, 0.5rem) var(--rounded-btn, 0.5rem)
     var(--rounded-btn, 0.5rem);
   margin-top: 0.5rem;
+  @apply bg-neutral;
 }
 
 .folder:before {
-  /*Transition is a little buggy, maybe disable animations altogether*/
+  content: "";
+  width: 50%;
+  height: 0.5rem;
+  border-radius: var(--rounded-btn, 0.5rem) 0.25rem 0 0;
+  position: absolute;
+  top: -0.5rem;
+  left: 0px;
+  @apply bg-neutral;
+}
+.folder:hover,
+.folder:hover:before,
+.folder:focus,
+.folder:focus:before {
+  @apply bg-neutral-focus;
+}
+
+.folder:after {
+  content: "";
+  width: 50%;
+  height: 0.25rem;
+  border-radius: 0 0 0 0.25rem;
+  --tw-bg-opacity: 1;
+  box-shadow: -5px 0 0 0 hsl(var(--n) / var(--tw-bg-opacity));
+  position: absolute;
+  top: -0.25rem;
+  right: 0;
+  color: none;
+  background-color: none;
+}
+
+.folder:hover:after,
+.folder:focus:after {
+  box-shadow: -5px 0 0 0 hsl(var(--nf, var(--n)) / var(--tw-bg-opacity));
+}
+
+/* .folder {
   transition-property: color, background-color, border-color,
     text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
     backdrop-filter;
   transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   animation: button-pop var(--animation-btn, 0.25s) ease-out;
+  border-width: 0px;
+  text-transform: none;
+  position: relative;
+  border-radius: 0 var(--rounded-btn, 0.5rem) var(--rounded-btn, 0.5rem)
+    var(--rounded-btn, 0.5rem);
+  margin-top: 0.5rem;
+  @apply bg-neutral;
+}
+
+
+.folder:before {
   content: "";
-  line-height: 0;
   width: 50%;
   height: 0.5rem;
   border-radius: 0.5rem 0.25rem 0 0;
@@ -31,42 +82,24 @@
 }
 
 .folder:hover:before {
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  animation: button-pop var(--animation-btn, 0.25s) ease-out;
   @apply bg-neutral-focus;
 }
 
 .folder:after {
-  /*Transition is a little buggy, maybe disable animations altogether*/
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  animation: button-pop var(--animation-btn, 0.25s) ease-out;
   content: "";
-  line-height: 0;
   width: 50%;
   height: 0.25rem;
   border-radius: 0 0 0 0.25rem;
   --tw-bg-opacity: 1;
-  box-shadow: -5px 0 0 0 hsl(var(--n) / var(--tw-bg-opacity));
+  box-shadow: -5px 0 0 0 red;
   position: absolute;
   top: -0.25rem;
   right: 0;
   color: none;
+  background-color: none;
 }
 
 .folder:hover:after {
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  animation: button-pop var(--animation-btn, 0.25s) ease-out;
-  box-shadow: -5px 0 0 0 hsl(var(--nf, var(--n)) / var(--tw-bg-opacity));
+  box-shadow: -5px 0 0 0 red;
 }
+ */

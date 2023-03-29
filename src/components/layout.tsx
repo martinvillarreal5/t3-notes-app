@@ -24,19 +24,22 @@ const Layout = ({ children, home }: layoutProps) => {
         <meta name="og:title" content={siteTitle} />
       </Head>
       <div
-        className="mx-auto flex min-h-screen w-full flex-col bg-base-300 px-2	 2xl:container sm:px-4"
+        className="mx-auto flex min-h-screen w-full flex-col  bg-base-300 px-2	 2xl:container sm:px-4"
         // xl:max-w-7xl
       >
-        <div className="navbar  px-0">
-          <div className=" py-2 sm:py-4">
-            <p className="text-3xl font-extrabold tracking-tight sm:text-4xl ">
+        <div className="sticky top-0 z-50 flex flex-col bg-base-300 px-0 py-0 ">
+          <div className="w-full border-b border-neutral bg-base-300 py-2 sm:py-3">
+            <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">
               T3 <span className="text-accent">Note</span> App
             </p>
           </div>
+          <div className="w-full border-b border-neutral bg-base-300 py-2 sm:py-3 lg:hidden">
+            <p className="">Burger Button and Breadcrumbs Here</p>
+          </div>
         </div>
 
-        <main className="flex grow flex-row gap-0 lg:gap-4">
-          <nav className="hidden min-w-[15.5rem] flex-col lg:flex">
+        <main className="flex grow flex-row gap-0 pt-4 lg:gap-4">
+          <nav className="hidden h-full min-w-[15.5rem] flex-col border lg:flex">
             <ul>
               <li className="pb-4 text-xl">
                 <Link href="/">Home</Link>

@@ -22,6 +22,7 @@ const config = {
   },
   plugins: [require("daisyui"), require("@tailwindcss/line-clamp")],
   daisyui: {
+    darkMode: "dracula",
     themes: [
       "dracula",
       "dark",

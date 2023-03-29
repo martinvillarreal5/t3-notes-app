@@ -131,7 +131,7 @@ const Folders: NextPage = () => {
           <p className=" text-sm">You dont have any folder yet.</p>
         )}
         <div className="divider my-1 sm:my-2"></div>
-
+        {/*Check if adheres to https://www.w3.org/TR/wai-aria-1.2/#separator*/}
         {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
         {isSuccessNotes && notes.length > 0 ? (
           <NotesGrid notes={notes} />
