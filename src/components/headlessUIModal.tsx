@@ -6,6 +6,8 @@ type ModalProps = {
   children?: React.ReactNode;
   title?: string;
   description?: string;
+
+  initialFocusRef?: React.MutableRefObject<null>;
 };
 
 export default function Modal({
@@ -14,6 +16,7 @@ export default function Modal({
   title,
   description,
   children,
+  initialFocusRef,
 }: ModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -21,6 +24,7 @@ export default function Modal({
         as="div"
         className="relative z-10"
         onClose={() => setIsOpen(false)}
+        initialFocus={initialFocusRef}
       >
         <Transition.Child
           as={Fragment}
@@ -35,7 +39,7 @@ export default function Modal({
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="flex min-h-full items-center justify-center p-2 text-center sm:p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
