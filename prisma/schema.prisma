@@ -32,7 +32,6 @@ model Account {
   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
 }
 
 model Session {
@@ -44,8 +43,6 @@ model Session {
   user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
-  @@map("sessions")
 
 }
 
@@ -61,8 +58,6 @@ model User {
   sessions              Session[]
     folders       Folder[]
     notes         Note[]
-
-  @@map("users")
 }
 
 model VerificationRequest {
