@@ -155,11 +155,12 @@ const Folder: NextPage = () => {
             An error ocurred fetching your folders
           </p>
         )}
-        {isSuccessFolder && folder.subFolders.length > 0 ? (
-          <FoldersGrid folders={folder.subFolders} />
-        ) : (
-          <p className="text-sm">You dont have any folder yet.</p>
-        )}
+        {isSuccessFolder &&
+          (folder.subFolders.length > 0 ? (
+            <FoldersGrid folders={folder.subFolders} />
+          ) : (
+            <p className="text-sm">You dont have any folder yet.</p>
+          ))}
         <div className="divider my-1 sm:my-2"></div>
         {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
         {isErrorNotes && (
@@ -167,11 +168,12 @@ const Folder: NextPage = () => {
             An error ocurred fetching your notes
           </p>
         )}
-        {isSuccessNotes && notes.length > 0 ? (
-          <NotesGrid notes={notes} />
-        ) : (
-          <p className="grow pb-1 text-sm">You dont have any note yet.</p>
-        )}
+        {isSuccessNotes &&
+          (notes.length > 0 ? (
+            <NotesGrid notes={notes} />
+          ) : (
+            <p className="grow pb-1 text-sm">You dont have any note yet.</p>
+          ))}
         {folder?.parentFolderId && (
           <p className="py-2 text-xl underline">
             <Link href={`/folders/${folder.parentFolderId}`}>
