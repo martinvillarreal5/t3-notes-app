@@ -48,9 +48,9 @@ export const noteRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.note.create({
         data: {
-          userId: ctx.session.user.id,
           content: input.content,
           title: input.title,
+          user: { connect: { id: ctx.session.user.id } },
         },
       });
     }),
@@ -65,9 +65,9 @@ export const noteRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.note.create({
         data: {
-          userId: ctx.session.user.id,
           content: input.content,
           title: input.title,
+          user: { connect: { id: ctx.session.user.id } },
           folder: { connect: { id: input.folderId } },
         },
       });

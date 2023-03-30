@@ -71,8 +71,18 @@ export const folderRouter = createTRPCRouter({
       return ctx.prisma.folder.create({
         data: {
           title: input.title,
-          userId: ctx.session.user.id,
-          parentFolderId: input.parentFolderId,
+          user: { connect: { id: ctx.session.user.id } },
+        },
+      });
+    }),
+  createSubFolder: protectedProcedure
+    .input(z.object({ title: z.string(), parentFolderId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.folder.create({
+        data: {
+          title: input.title,
+          user: { connect: { id: ctx.session.user.id } },
+          parentFolder: { connect: { id: input.parentFolderId } },
         },
       });
     }),
