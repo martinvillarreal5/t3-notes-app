@@ -7,12 +7,6 @@ type layoutProps = {
   home?: boolean;
 };
 
-/* 
-fro navbar check https://www.radix-ui.com/docs/primitives/components/navigation-menu#with-client-side-routing
-
-
-*/
-
 const Layout = ({ children, home }: layoutProps) => {
   const { status } = useSession();
   const siteTitle = "T3 Notes App";
@@ -39,7 +33,7 @@ const Layout = ({ children, home }: layoutProps) => {
         </div>
 
         <main className="flex grow flex-row gap-0 pt-4 lg:gap-4">
-          <nav className="hidden h-full min-w-[15.5rem] flex-col border lg:flex">
+          <nav className="h-screen-[90%] fixed hidden w-[15.5rem] flex-col pr-4 lg:flex">
             <ul>
               <li className="pb-4 text-xl">
                 <Link href="/">Home</Link>
@@ -57,20 +51,10 @@ const Layout = ({ children, home }: layoutProps) => {
               )}
             </ul>
           </nav>
-          <div
-            className="flex grow flex-col"
-            //lg:basis-4/5
-          >
+          <div className="ml-0 flex grow flex-col lg:ml-[15.5rem]">
             {children}
           </div>
         </main>
-        {/* <footer className="">
-          {!home && (
-            <p className="pb-8 pt-4 text-xl underline">
-              <Link href="/">← Back to home</Link>
-            </p>
-          )}
-        </footer> */}
       </div>
     </>
   );
