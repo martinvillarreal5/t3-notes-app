@@ -27,8 +27,9 @@ const Folder: NextPage = () => {
   const {
     data: folder,
     isLoading: isLoadingFolder,
-    refetch: refetchFolder,
     isSuccess: isSuccessFolder,
+    isError: isErrorFolder,
+    refetch: refetchFolder,
   } = api.folder.getByIdWithSubfolders.useQuery(
     { folderId: folderId },
     { enabled: sessionData?.user !== undefined }
@@ -38,6 +39,7 @@ const Folder: NextPage = () => {
     data: notes,
     isLoading: isLoadingNotes,
     isSuccess: isSuccessNotes,
+    isError: isErrorNotes,
     refetch: refetchNotes,
   } = api.note.getByFolderId.useQuery(
     { folderId: folderId },
@@ -48,7 +50,7 @@ const Folder: NextPage = () => {
 
   const parentFolderId = folder?.parentFolderId;
 
-  const createSubFolder = api.folder.create.useMutation({
+  const createSubFolder = api.folder.createSubFolder.useMutation({
     onSuccess: () => {
       void setIsFolderModalOpen(false);
       void refetchFolder();
@@ -103,7 +105,11 @@ const Folder: NextPage = () => {
       <Layout>
         <div className="flex flex-row items-end gap-2 pb-3	">
           <h2 className=" text-2xl sm:text-3xl">
-            {folder?.title || "Loading.."}
+            {isLoadingFolder && "Loading.."}
+            {isErrorFolder && (
+              <span className="text-error">An Error Ocurred</span>
+            )}
+            {isSuccessFolder && folder.title}
           </h2>
           {sessionData?.user !== undefined && isSuccessFolder && (
             <>
@@ -144,13 +150,23 @@ const Folder: NextPage = () => {
         {isLoadingFolder && (
           <p className="py-4 text-2xl ">Loading Sub-Folders</p>
         )}
+        {isErrorFolder && (
+          <p className="py-4 text-2xl text-error">
+            An error ocurred fetching your folders
+          </p>
+        )}
         {isSuccessFolder && folder.subFolders.length > 0 ? (
           <FoldersGrid folders={folder.subFolders} />
         ) : (
-          <p className=" text-sm">You dont have any folder yet.</p>
+          <p className="text-sm">You dont have any folder yet.</p>
         )}
         <div className="divider my-1 sm:my-2"></div>
         {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
+        {isErrorNotes && (
+          <p className="py-4 text-2xl text-error">
+            An error ocurred fetching your notes
+          </p>
+        )}
         {isSuccessNotes && notes.length > 0 ? (
           <NotesGrid notes={notes} />
         ) : (
@@ -159,7 +175,7 @@ const Folder: NextPage = () => {
         {folder?.parentFolderId && (
           <p className="py-2 text-xl underline">
             <Link href={`/folders/${folder.parentFolderId}`}>
-              {`← Back to parent folder`}{" "}
+              {`← Back to parent folder`}
             </Link>
           </p>
         )}

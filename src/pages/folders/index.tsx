@@ -31,6 +31,7 @@ const Folders: NextPage = () => {
     data: folders,
     isLoading: isLoadingFolders,
     isSuccess: isSuccessFolders,
+    isError: isErrorFolders,
     refetch: refetchFolders,
   } = api.folder.getAllTopLevel.useQuery(
     undefined, // no input
@@ -41,6 +42,7 @@ const Folders: NextPage = () => {
     data: notes,
     isLoading: isLoadingNotes,
     isSuccess: isSuccessNotes,
+    isError: isErrorNotes,
     refetch: refetchNotes,
   } = api.note.getAllTopLevel.useQuery(undefined, {
     enabled: sessionData?.user !== undefined,
@@ -90,7 +92,7 @@ const Folders: NextPage = () => {
       </Head>
       <Layout>
         <div className="flex flex-row items-center gap-2 pb-3">
-          <HomeIcon />
+          {/* <HomeIcon /> */}
           <h2 className="text-2xl sm:text-3xl">Folders</h2>
           {sessionData?.user !== undefined && (
             <>
@@ -122,8 +124,10 @@ const Folders: NextPage = () => {
           )}
         </div>
         {isLoadingFolders && <p className="py-4 text-2xl ">Loading Folders</p>}
-        {!isSuccessFolders && (
-          <p className="py-4 text-2xl ">An error ocurred fetching Folders</p>
+        {isErrorFolders && (
+          <p className="py-4 text-2xl text-error">
+            An error ocurred fetching your folders
+          </p>
         )}
         {isSuccessFolders && folders.length > 0 ? (
           <FoldersGrid folders={folders} />
@@ -133,6 +137,11 @@ const Folders: NextPage = () => {
         <div className="divider my-1 sm:my-2"></div>
         {/*Check if adheres to https://www.w3.org/TR/wai-aria-1.2/#separator*/}
         {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
+        {isErrorNotes && (
+          <p className="py-4 text-2xl text-error ">
+            An error ocurred fetching your notes
+          </p>
+        )}
         {isSuccessNotes && notes.length > 0 ? (
           <NotesGrid notes={notes} />
         ) : (
