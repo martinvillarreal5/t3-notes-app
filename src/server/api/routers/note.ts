@@ -10,16 +10,8 @@ export const noteRouter = createTRPCRouter({
       },
     });
   }),
-  getAllTopLevel: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.note.findMany({
-      where: {
-        userId: ctx.session.user.id,
-        folderId: null,
-      },
-    });
-  }),
   getByFolderId: protectedProcedure
-    .input(z.object({ folderId: z.string() }))
+    .input(z.object({ folderId: z.string().nullable() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.note.findMany({
         where: {

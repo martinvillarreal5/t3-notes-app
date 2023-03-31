@@ -1,8 +1,13 @@
-import { type Folder } from "@prisma/client";
+//import { type Folder } from "@prisma/client";
 import Link from "next/link";
 
+type FolderMinimalInfo = {
+  id: string;
+  title: string;
+};
+
 type folderGridProps = {
-  folders: Folder[];
+  folders: FolderMinimalInfo[];
 };
 
 const FoldersGrid = ({ folders }: folderGridProps) => {

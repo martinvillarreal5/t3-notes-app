@@ -1,20 +1,20 @@
 import { type NextPage } from "next";
-import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
-import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import {
   FolderPlus as FolderPlusIcon,
   FilePlus as FilePlusIcon,
   Trash2 as TrashIcon,
 } from "lucide-react";
-import FoldersGrid from "~/components/folders/foldersGrid";
+import Layout from "~/components/layout";
 import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
-import NotesGrid from "~/components/notes/notesGrid";
+import FoldersGridContainer from "~/components/folders/foldersGridContainer";
+import NotesGridContainer from "~/components/notes/notesGridContainer";
 
 const Folder: NextPage = () => {
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
@@ -26,26 +26,11 @@ const Folder: NextPage = () => {
 
   const {
     data: folder,
-    isLoading: isLoadingFolder,
-    isSuccess: isSuccessFolder,
-    isError: isErrorFolder,
-    refetch: refetchFolder,
-  } = api.folder.getByIdWithSubfolders.useQuery(
+    status,
+    refetch: refetch,
+  } = api.folder.getById.useQuery(
     { folderId: folderId },
     { enabled: sessionData?.user !== undefined }
-  );
-
-  const {
-    data: notes,
-    isLoading: isLoadingNotes,
-    isSuccess: isSuccessNotes,
-    isError: isErrorNotes,
-    refetch: refetchNotes,
-  } = api.note.getByFolderId.useQuery(
-    { folderId: folderId },
-    {
-      enabled: sessionData?.user !== undefined,
-    }
   );
 
   const parentFolderId = folder?.parentFolderId;
@@ -53,7 +38,7 @@ const Folder: NextPage = () => {
   const createSubFolder = api.folder.createSubFolder.useMutation({
     onSuccess: () => {
       void setIsFolderModalOpen(false);
-      void refetchFolder();
+      void refetch();
     },
   });
 
@@ -72,7 +57,7 @@ const Folder: NextPage = () => {
   const createNote = api.note.createFolderNote.useMutation({
     onSuccess: () => {
       void setIsNoteModalOpen(false);
-      void refetchNotes();
+      void refetch();
     },
   });
 
@@ -105,13 +90,13 @@ const Folder: NextPage = () => {
       <Layout>
         <div className="flex flex-row items-end gap-2 pb-3	">
           <h2 className=" text-2xl sm:text-3xl">
-            {isLoadingFolder && "Loading.."}
-            {isErrorFolder && (
+            {status === "loading" && "Loading.."}
+            {status === "error" && (
               <span className="text-error">An Error Ocurred</span>
             )}
-            {isSuccessFolder && folder.title}
+            {status === "success" && folder.title}
           </h2>
-          {sessionData?.user !== undefined && isSuccessFolder && (
+          {sessionData?.user !== undefined && status === "success" && (
             <>
               <button
                 title="Create Folder"
@@ -147,33 +132,12 @@ const Folder: NextPage = () => {
             </>
           )}
         </div>
-        {isLoadingFolder && (
-          <p className="py-4 text-2xl ">Loading Sub-Folders</p>
-        )}
-        {isErrorFolder && (
-          <p className="py-4 text-2xl text-error">
-            An error ocurred fetching your folders
-          </p>
-        )}
-        {isSuccessFolder &&
-          (folder.subFolders.length > 0 ? (
-            <FoldersGrid folders={folder.subFolders} />
-          ) : (
-            <p className="text-sm">You dont have any folder yet.</p>
-          ))}
+        <FoldersGridContainer
+          folders={folder?.subFolders}
+          dataStatus={status}
+        />
         <div className="divider my-1 sm:my-2"></div>
-        {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
-        {isErrorNotes && (
-          <p className="py-4 text-2xl text-error">
-            An error ocurred fetching your notes
-          </p>
-        )}
-        {isSuccessNotes &&
-          (notes.length > 0 ? (
-            <NotesGrid notes={notes} />
-          ) : (
-            <p className="grow pb-1 text-sm">You dont have any note yet.</p>
-          ))}
+        <NotesGridContainer notes={folder?.notes} dataStatus={status} />
         {folder?.parentFolderId && (
           <p className="py-2 text-xl underline">
             <Link href={`/folders/${folder.parentFolderId}`}>

@@ -2,23 +2,18 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import Layout from "~/components/layout";
-import {
-  api,
-  //type RouterOutputs
-} from "~/utils/api";
-import FoldersGrid from "~/components/folders/foldersGrid";
-import NotesGrid from "~/components/notes/notesGrid";
+import { api } from "~/utils/api";
 import { useState } from "react";
 import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
 
 import {
   FolderPlus as FolderPlusIcon,
-  Home as HomeIcon,
+  //Home as HomeIcon,
   FilePlus as FilePlusIcon,
 } from "lucide-react";
-
-//type Folder = RouterOutputs["folder"]["getAll"][0]; // Folder Type
+import FoldersGridContainer from "~/components/folders/foldersGridContainer";
+import NotesGridContainer from "~/components/notes/notesGridContainer";
 
 const Folders: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -29,24 +24,23 @@ const Folders: NextPage = () => {
 
   const {
     data: folders,
-    isLoading: isLoadingFolders,
-    isSuccess: isSuccessFolders,
-    isError: isErrorFolders,
     refetch: refetchFolders,
-  } = api.folder.getAllTopLevel.useQuery(
-    undefined, // no input
+    status: foldersStatus,
+  } = api.folder.getByParentFolderId.useQuery(
+    { parentFolderId: null },
     { enabled: sessionData?.user !== undefined }
   );
 
   const {
     data: notes,
-    isLoading: isLoadingNotes,
-    isSuccess: isSuccessNotes,
-    isError: isErrorNotes,
     refetch: refetchNotes,
-  } = api.note.getAllTopLevel.useQuery(undefined, {
-    enabled: sessionData?.user !== undefined,
-  });
+    status: notesStatus,
+  } = api.note.getByFolderId.useQuery(
+    { folderId: null },
+    {
+      enabled: sessionData?.user !== undefined,
+    }
+  );
 
   const createFolder = api.folder.create.useMutation({
     onSuccess: () => {
@@ -61,9 +55,7 @@ const Folders: NextPage = () => {
       //? We cant use a compound unique constraint in the prisma schema like [userId, title, parentId]
       //? because parentId can be null
       //? https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#unique-1
-      //? https://github.com/prisma/prisma/issues/3197
-      //? A workaround may be to use a dummy value instead of null like "isNull", but that will probably lead to more problems.
-      console.log("Repeated folder title");
+      //? https://github.com/prisma/prisma/issues/3197console.log("Repeated folder title");
       //TODO throw error
       return;
     }
@@ -123,32 +115,10 @@ const Folders: NextPage = () => {
             </>
           )}
         </div>
-        {isLoadingFolders && <p className="py-4 text-2xl ">Loading Folders</p>}
-        {isErrorFolders && (
-          <p className="py-4 text-2xl text-error">
-            An error ocurred fetching your folders
-          </p>
-        )}
-        {isSuccessFolders &&
-          (folders.length > 0 ? (
-            <FoldersGrid folders={folders} />
-          ) : (
-            <p className=" text-sm">You dont have any folder yet.</p>
-          ))}
+        <FoldersGridContainer dataStatus={foldersStatus} folders={folders} />
         <div className="divider my-1 sm:my-2"></div>
         {/*Check if adheres to https://www.w3.org/TR/wai-aria-1.2/#separator*/}
-        {isLoadingNotes && <p className="py-4 text-2xl ">Loading Notes</p>}
-        {isErrorNotes && (
-          <p className="py-4 text-2xl text-error ">
-            An error ocurred fetching your notes
-          </p>
-        )}
-        {isSuccessNotes &&
-          (notes.length > 0 ? (
-            <NotesGrid notes={notes} />
-          ) : (
-            <p className="pb-1 text-sm">You dont have any note yet.</p>
-          ))}
+        <NotesGridContainer dataStatus={notesStatus} notes={notes} />
       </Layout>
     </>
   );

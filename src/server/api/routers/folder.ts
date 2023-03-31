@@ -10,16 +10,8 @@ export const folderRouter = createTRPCRouter({
       },
     });
   }),
-  getAllTopLevel: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.folder.findMany({
-      where: {
-        parentFolderId: null,
-        userId: ctx.session.user.id,
-      },
-    });
-  }),
   getByParentFolderId: protectedProcedure
-    .input(z.object({ parentFolderId: z.string() }))
+    .input(z.object({ parentFolderId: z.string().nullable() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.folder.findMany({
         where: {
@@ -36,18 +28,9 @@ export const folderRouter = createTRPCRouter({
           id: input.folderId,
           userId: ctx.session.user.id,
         },
-      });
-    }),
-  getByIdWithSubfolders: protectedProcedure
-    .input(z.object({ folderId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.folder.findFirstOrThrow({
-        where: {
-          id: input.folderId,
-          userId: ctx.session.user.id,
-        },
         include: {
-          subFolders: true,
+          subFolders: { select: { id: true, title: true } },
+          notes: true,
         },
       });
     }),
@@ -58,6 +41,7 @@ export const folderRouter = createTRPCRouter({
       },
       select: {
         id: true,
+        title: true,
         parentFolderId: true,
       },
     });
