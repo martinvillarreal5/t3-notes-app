@@ -1,14 +1,17 @@
+import { Menu as MenuIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
+import Drawer from "./headlessUIDrawer";
 
 type layoutProps = {
   children: React.ReactNode;
-  home?: boolean;
 };
 
-const Layout = ({ children, home }: layoutProps) => {
+const Layout = ({ children }: layoutProps) => {
   const { status } = useSession();
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const siteTitle = "T3 Notes App";
   return (
     <>
@@ -21,16 +24,46 @@ const Layout = ({ children, home }: layoutProps) => {
         className="mx-auto flex min-h-screen w-full flex-col  bg-base-300 px-2	 2xl:container sm:px-4"
         // xl:max-w-7xl
       >
-        <div className="sticky top-0 z-50 flex flex-col bg-base-300 px-0 py-0 ">
+        <div className="sticky top-0 z-10 flex flex-col bg-base-300 px-0 py-0 ">
           <div className="w-full border-b border-neutral bg-base-300 py-2 sm:py-3">
             <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">
               T3 <span className="text-accent">Note</span> App
             </p>
           </div>
-          <div className="w-full border-b border-neutral bg-base-300 py-2 sm:py-3 lg:hidden">
-            <p className="">Burger Button and Breadcrumbs Here</p>
+          <div
+            className="flex w-full
+          items-center border-b border-neutral bg-base-300 py-2 sm:py-3 lg:hidden"
+          >
+            <button
+              title="open menu"
+              className="btn-ghost btn-square btn-sm btn mr-4"
+              onClick={() => setIsNavOpen(true)}
+            >
+              <MenuIcon />
+            </button>
+            <p className="">Breadcrumbs Here</p>
           </div>
         </div>
+        <Drawer isOpen={isNavOpen} setIsOpen={setIsNavOpen}>
+          <nav className="h-screen-[90%] fixed flex w-[15.5rem] flex-col pr-4">
+            <ul>
+              <li className="pb-4 text-xl">
+                <Link href="/">Home</Link>
+              </li>
+              {status === "loading" && <li>Loading</li>}
+              <li className="pb-4 text-xl ">
+                <Link href={"/login"}>
+                  {status === "authenticated" ? "Account" : "Log in"}
+                </Link>
+              </li>
+              {status === "authenticated" && (
+                <li className="pb-4 text-xl ">
+                  <Link href={"/folders"}>Your Folders</Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+        </Drawer>
 
         <main className="flex grow flex-row gap-0 pt-4 lg:gap-4">
           <nav className="h-screen-[90%] fixed hidden w-[15.5rem] flex-col pr-4 lg:flex">
