@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useRef } from "react";
+import { Fragment } from "react";
 import { X as CloseIcon } from "lucide-react";
 type ModalProps = {
   isOpen: boolean;
@@ -38,19 +38,19 @@ const Drawer = ({
           <div className="fixed inset-0 bg-black bg-opacity-60" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+        <div className="fixed inset-y-0 inset-x-0 overflow-hidden">
+          <div className="absolute inset-y-0 inset-x-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-full flex max-w-full">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
+                enterFrom="translate-x-0"
+                enterTo="translate-x-full"
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
-                leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
+                leaveFrom="translate-x-full"
+                leaveTo="translate-x-0"
               >
-                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
+                <Dialog.Panel className="z-100 pointer-events-auto relative w-screen max-w-md">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-500"
@@ -60,7 +60,7 @@ const Drawer = ({
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+                    <div className="absolute left-full top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
                       <button
                         type="button"
                         className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
