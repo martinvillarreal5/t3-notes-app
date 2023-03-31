@@ -12,7 +12,7 @@ const Home: NextPage = () => {
       <Head>
         <title>T3 Notes App</title>
       </Head>
-      <Layout home>
+      <Layout>
         {status === "loading" && <h2>Loading...</h2>}
 
         <Link href={"/login"}>
