@@ -1,4 +1,3 @@
-//TODO Convert to file to ts and esm modules
 /* eslint-disable @typescript-eslint/no-var-requires */
 import defaultTheme from "tailwindcss/defaultTheme";
 
