@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-import Drawer from "./headlessUIDrawer";
+import Drawer from "./ui/headlessUIDrawer";
 
 type layoutProps = {
   children: React.ReactNode;
@@ -26,9 +26,13 @@ const Layout = ({ children }: layoutProps) => {
       >
         <div className="sticky top-0 z-10 flex flex-col bg-base-300 px-0 py-0 ">
           <div className="w-full border-b border-neutral bg-base-300 py-2 sm:py-3">
-            <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-              T3 <span className="text-accent">Note</span> App
-            </p>
+            <div className="flex w-fit">
+              <Link href="/">
+                <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+                  T3 <span className="text-accent">Note</span> App
+                </p>
+              </Link>
+            </div>
           </div>
           <div
             className="flex w-full
@@ -51,11 +55,11 @@ const Layout = ({ children }: layoutProps) => {
                 <Link href="/">Home</Link>
               </li>
               {status === "loading" && <li>Loading</li>}
-              <li className="pb-4 text-xl ">
-                <Link href={"/login"}>
-                  {status === "authenticated" ? "Account" : "Log in"}
-                </Link>
-              </li>
+              {status === "authenticated" && (
+                <li className="pb-4 text-xl ">
+                  <Link href={"/account/profile"}>Profile</Link>
+                </li>
+              )}
               {status === "authenticated" && (
                 <li className="pb-4 text-xl ">
                   <Link href={"/folders"}>Your Folders</Link>
@@ -68,15 +72,12 @@ const Layout = ({ children }: layoutProps) => {
         <main className="flex grow flex-row gap-0 pt-4 lg:gap-4">
           <nav className="h-screen-[90%] fixed hidden w-[15.5rem] flex-col pr-4 lg:flex">
             <ul>
-              <li className="pb-4 text-xl">
-                <Link href="/">Home</Link>
-              </li>
               {status === "loading" && <li>Loading</li>}
-              <li className="pb-4 text-xl ">
-                <Link href={"/login"}>
-                  {status === "authenticated" ? "Account" : "Log in"}
-                </Link>
-              </li>
+              {status === "authenticated" && (
+                <li className="pb-4 text-xl ">
+                  <Link href={"/account/profile"}>Profile</Link>
+                </li>
+              )}
               {status === "authenticated" && (
                 <li className="pb-4 text-xl ">
                   <Link href={"/folders"}>Your Folders</Link>
