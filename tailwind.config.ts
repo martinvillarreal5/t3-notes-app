@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const defaultTheme = require("tailwindcss/defaultTheme");
+import defaultTheme from "tailwindcss/defaultTheme";
 
-/** @type {import('tailwindcss').Config} */
+import { type Config } from "tailwindcss";
 
-const config = {
+export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
     screens: {
       xs: "550px",
       /*  
@@ -20,7 +19,7 @@ const config = {
       ...defaultTheme.screens,
     },
   },
-  plugins: [require("daisyui"), require("@tailwindcss/line-clamp")],
+  plugins: [require("daisyui")],
   daisyui: {
     darkMode: "dracula",
     themes: [
@@ -29,11 +28,9 @@ const config = {
       "night",
       "business",
       {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dracula: {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // The color of the text of btn-error doesnt match the one in the docs, so i assume is a bug
-          // Here's a ugly workaround. Only for the base button
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           ...require("daisyui/src/colors/themes")["[data-theme=dracula]"],
           ".btn-error": {
             color: "#440000",
@@ -42,6 +39,4 @@ const config = {
       },
     ],
   },
-};
-
-module.exports = config;
+} satisfies Config;

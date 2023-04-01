@@ -22,7 +22,7 @@ const Drawer = ({
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-20"
         onClose={() => setIsOpen(false)}
         initialFocus={initialFocusRef}
       >
@@ -38,8 +38,8 @@ const Drawer = ({
           <div className="fixed inset-0 bg-black bg-opacity-60" />
         </Transition.Child>
 
-        <div className="fixed inset-y-0 inset-x-0 overflow-hidden">
-          <div className="absolute inset-y-0 inset-x-0 overflow-hidden">
+        <div className="fixed inset-x-0 inset-y-0 overflow-hidden">
+          <div className="absolute inset-x-0 inset-y-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-full flex max-w-full">
               <Transition.Child
                 as={Fragment}
@@ -71,7 +71,7 @@ const Drawer = ({
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex h-full flex-col overflow-y-auto bg-base-100 py-6 shadow-xl">
+                  <div className="bg-base-100 flex h-full flex-col overflow-y-auto py-6 shadow-xl">
                     {title && (
                       <div className="px-4 sm:px-6">
                         <Dialog.Title className="text-lg font-medium leading-6">

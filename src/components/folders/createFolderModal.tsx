@@ -1,4 +1,4 @@
-import Modal from "../headlessUIModal";
+import Modal from "../ui/headlessUIModal";
 import { useState } from "react";
 
 type ModalProps = {

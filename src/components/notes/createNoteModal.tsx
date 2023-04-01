@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "../headlessUIModal";
+import Modal from "../ui/headlessUIModal";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
