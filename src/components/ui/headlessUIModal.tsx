@@ -22,7 +22,7 @@ export default function Modal({
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-20"
         onClose={() => setIsOpen(false)}
         initialFocus={initialFocusRef}
       >
@@ -50,8 +50,8 @@ export default function Modal({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className="w-full max-w-md transform overflow-hidden 
-                rounded bg-base-100
+                className="bg-base-100 w-full max-w-md transform 
+                overflow-hidden rounded
                 p-6 text-left align-middle shadow-xl transition-all"
               >
                 {title && (
