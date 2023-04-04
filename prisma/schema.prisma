@@ -81,7 +81,9 @@ model Folder {
     parentFolder    Folder?     @relation("FolderHierarchy", fields: [parentFolderId], references: [id], onDelete: Cascade)
     subFolders      Folder[]    @relation("FolderHierarchy")
     createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @updatedAt   
+    updatedAt       DateTime    @updatedAt  
+
+    @@unique([title, parentFolderId]) 
 
 }
 
