@@ -35,25 +35,6 @@ const Folder: NextPage = () => {
 
   const parentFolderId = folder?.parentFolderId;
 
-  const createSubFolder = api.folder.createSubFolder.useMutation({
-    onSuccess: () => {
-      void setIsFolderModalOpen(false);
-      void refetch();
-    },
-  });
-
-  const createSubFolderHandler = (subFolderTitle: string) => {
-    if (folder?.subFolders?.some((folder) => folder.title === subFolderTitle)) {
-      console.log("Repeated subfolder title");
-      //TODO throw error
-      return;
-    }
-    createSubFolder.mutate({
-      title: subFolderTitle,
-      parentFolderId: folderId,
-    });
-  };
-
   const createNote = api.note.createFolderNote.useMutation({
     onSuccess: () => {
       void setIsNoteModalOpen(false);
@@ -85,7 +66,9 @@ const Folder: NextPage = () => {
   return (
     <>
       <Head>
-        <title>T3 Notes App</title>
+        {status === "loading" && <title>Loading...</title>}
+        {status === "error" && <title>An Error Ocurred</title>}
+        {status === "success" && <title>{folder.title}</title>}
       </Head>
       <Layout>
         <div className="flex flex-row items-end gap-2 pb-3	">
@@ -108,7 +91,8 @@ const Folder: NextPage = () => {
               <CreateFolderModal
                 isOpen={isFolderModalOpen}
                 setIsOpen={setIsFolderModalOpen}
-                createFunction={createSubFolderHandler}
+                parentId={folder.id}
+                parentTitle={folder.title}
               />
               <button
                 title="Create Note"
@@ -136,7 +120,7 @@ const Folder: NextPage = () => {
           folders={folder?.subFolders}
           dataStatus={status}
         />
-        <div className="divider my-1 sm:my-2"></div>
+        <div className="divider my-1 sm:my-2" />
         <NotesGridContainer notes={folder?.notes} dataStatus={status} />
         {folder?.parentFolderId && (
           <p className="py-2 text-xl underline">

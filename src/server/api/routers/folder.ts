@@ -10,7 +10,7 @@ export const folderRouter = createTRPCRouter({
       },
     });
   }),
-  getByParentFolderId: protectedProcedure
+  getManyByParentFolderId: protectedProcedure
     .input(z.object({ parentFolderId: z.string().nullable() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.folder.findMany({
@@ -30,6 +30,7 @@ export const folderRouter = createTRPCRouter({
         },
         include: {
           subFolders: { select: { id: true, title: true } },
+          parentFolder: { select: { id: true, title: true } },
           notes: true,
         },
       });
@@ -49,24 +50,24 @@ export const folderRouter = createTRPCRouter({
   }),
   create: protectedProcedure
     .input(
-      z.object({ title: z.string(), parentFolderId: z.string().optional() })
+      z.object({ title: z.string(), parentFolderId: z.string().nullable() })
     )
     .mutation(({ ctx, input }) => {
+      const createFields = {
+        title: input.title,
+        user: { connect: { id: ctx.session.user.id } },
+      };
+      if (input.parentFolderId) {
+        return ctx.prisma.folder.create({
+          data: {
+            parentFolder: { connect: { id: input.parentFolderId } },
+            ...createFields,
+          },
+        });
+      }
       return ctx.prisma.folder.create({
         data: {
-          title: input.title,
-          user: { connect: { id: ctx.session.user.id } },
-        },
-      });
-    }),
-  createSubFolder: protectedProcedure
-    .input(z.object({ title: z.string(), parentFolderId: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.folder.create({
-        data: {
-          title: input.title,
-          user: { connect: { id: ctx.session.user.id } },
-          parentFolder: { connect: { id: input.parentFolderId } },
+          ...createFields,
         },
       });
     }),
