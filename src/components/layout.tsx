@@ -59,14 +59,15 @@ const Layout = ({ children }: layoutProps) => {
       <div className="overflow-hidden">
         <div className="mx-auto	max-w-[90rem] px-4 pt-4 sm:px-6 md:px-8">
           <div
-            className="fixed inset-0 
-              left-[max(0px,calc(50%-45rem))] right-auto top-[3rem]
-              z-10 hidden w-[19.5rem] overflow-y-auto
-              px-8 pb-10 pt-8
+            className="border-neutral fixed 
+              inset-0 left-[max(0px,calc(50%-45rem))] right-auto
+              top-[3rem] z-10 hidden w-[19.5rem]
+              overflow-y-auto border-r px-8
+              pb-10 pt-8
               lg:top-[4.35rem] lg:block
             "
           >
-            <nav className="border-neutral">
+            <nav>
               <ul>
                 {status === "loading" && <li>Loading</li>}
                 {status === "authenticated" && (
