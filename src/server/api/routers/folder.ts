@@ -46,7 +46,10 @@ export const folderRouter = createTRPCRouter({
         parentFolderId: true,
       },
     });
-    return arrayToTree(flatArray, { parentId: "parentFolderId" });
+    return arrayToTree(flatArray, {
+      parentId: "parentFolderId",
+      dataField: null,
+    });
   }),
   create: protectedProcedure
     .input(
