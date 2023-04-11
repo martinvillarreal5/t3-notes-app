@@ -15,13 +15,13 @@ import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
 import FoldersGridContainer from "~/components/folders/foldersGridContainer";
 import NotesGridContainer from "~/components/notes/notesGridContainer";
+import FolderBreadcrumbs from "~/components/folderBreadcrumbs";
 
 const Folder: NextPage = () => {
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const router = useRouter();
   const { folderId } = router.query as { folderId: string }; //TODO Find a better way?
-
   const { data: sessionData } = useSession();
 
   const {
@@ -30,7 +30,9 @@ const Folder: NextPage = () => {
     refetch: refetch,
   } = api.folder.getById.useQuery(
     { folderId: folderId },
-    { enabled: sessionData?.user !== undefined }
+    {
+      enabled: sessionData?.user !== undefined,
+    }
   );
 
   const parentFolderId = folder?.parentFolderId;
@@ -70,7 +72,7 @@ const Folder: NextPage = () => {
         {status === "error" && <title>An Error Ocurred</title>}
         {status === "success" && <title>{folder.title}</title>}
       </Head>
-      <Layout>
+      <Layout extraNavbarContent={<FolderBreadcrumbs folderId={folderId} />}>
         <div className="flex flex-row items-end gap-2 pb-3	">
           <h2 className=" text-2xl sm:text-3xl">
             {status === "loading" && "Loading.."}
