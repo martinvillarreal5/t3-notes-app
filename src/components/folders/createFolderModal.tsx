@@ -1,12 +1,19 @@
+import type { Folder } from "@prisma/client";
 import Modal from "../ui/headlessUIModal";
 import { useState } from "react";
 import { api } from "~/utils/api";
+
+type FolderMinimalInfo = {
+  id: string;
+  title: string;
+};
 
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
   parentTitle?: string;
   parentId?: string | null;
+  folders?: FolderMinimalInfo[] | Folder[]; //Find a way to make this prop required when parentId is not specified as prop
 };
 
 const CreateFolderModal = ({
@@ -14,6 +21,7 @@ const CreateFolderModal = ({
   setIsOpen,
   parentTitle,
   parentId = null,
+  folders,
 }: ModalProps) => {
   const [folderTitle, setFolderTitle] = useState("");
   const [Error, setError] = useState("");
@@ -26,24 +34,38 @@ const CreateFolderModal = ({
       console.log("Error creating folder: " + error.message);
     },
     onSuccess: () => {
-      void setError("");
-      void setFolderTitle(""); //? Necesary?
-      void setIsOpen(false);
       parentId
         ? void ctx.folder.getById.invalidate({ folderId: parentId })
         : void ctx.folder.getManyByParentFolderId.invalidate({
             parentFolderId: null,
           });
+      void ctx.folder.getFoldersTree.invalidate();
+      void setError("");
+      void setFolderTitle(""); //? Necesary?
+      void setIsOpen(false);
     },
   });
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const target = e.target as typeof e.target & {
-      folderTitle: { value: string };
-    };
+
+    if (!parentId) {
+      // If the folder is a root level folder (has no parent)
+      if (folders?.some((folder) => folder.title === folderTitle)) {
+        //? the unique compuound constraint of the prisma model wont work because i doesnt that field
+        //? with null values as equal. So even if they have the same title, the parentId is null and
+        //? prisma will take it as diferent values
+        //? https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#unique-1
+        //? https://github.com/prisma/prisma/issues/3197console.log("Repeated folder title");
+        setError(
+          "Folder title is already used by another folder in this directory"
+        );
+        return;
+      }
+    }
+
     createFolder.mutate({
-      title: target.folderTitle.value,
+      title: folderTitle,
       parentFolderId: parentId,
     });
   };
