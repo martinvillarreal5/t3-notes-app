@@ -1,16 +1,11 @@
+import type { Note } from "@prisma/client";
 import NotesGrid from "./notesGrid";
-
-type NoteMinimalInfo = {
-  id: string;
-  title: string | null;
-  content: string;
-};
 
 const NotesGridContainer = ({
   notes,
   dataStatus,
 }: {
-  notes: NoteMinimalInfo[] | undefined;
+  notes: Note[] | undefined;
   dataStatus: string;
 }) => {
   return (

@@ -1,13 +1,7 @@
-//import Link from "next/link";
-
-type NoteMinimalInfo = {
-  id: string;
-  title: string | null;
-  content: string;
-};
+import type { Note } from "@prisma/client";
 
 type notesGridProps = {
-  notes: NoteMinimalInfo[];
+  notes: Note[];
 };
 
 const NotesGrid = ({ notes }: notesGridProps) => {
