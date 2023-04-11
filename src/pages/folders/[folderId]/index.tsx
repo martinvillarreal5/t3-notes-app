@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
@@ -24,11 +23,7 @@ const Folder: NextPage = () => {
   const { folderId } = router.query as { folderId: string }; //TODO Find a better way?
   const { data: sessionData } = useSession();
 
-  const {
-    data: folder,
-    status,
-    refetch: refetch,
-  } = api.folder.getById.useQuery(
+  const { data: folder, status } = api.folder.getById.useQuery(
     { folderId: folderId },
     {
       enabled: sessionData?.user !== undefined,
@@ -36,20 +31,6 @@ const Folder: NextPage = () => {
   );
 
   const parentFolderId = folder?.parentFolderId;
-
-  const createNote = api.note.createFolderNote.useMutation({
-    onSuccess: () => {
-      void setIsNoteModalOpen(false);
-      void refetch();
-    },
-  });
-
-  const createNoteHandler = (noteContent: string) => {
-    createNote.mutate({
-      content: noteContent,
-      folderId: folderId,
-    });
-  };
 
   const deleteFolder = api.folder.delete.useMutation({
     onSuccess: () => {
@@ -106,12 +87,14 @@ const Folder: NextPage = () => {
               <CreateNoteModal
                 isOpen={isNoteModalOpen}
                 setIsOpen={setIsNoteModalOpen}
-                createFunction={createNoteHandler}
+                folderId={folder.id}
+                folderTitle={folder.title}
               />
               <button
-                title="Delete Folder"
+                title="Delete this Folder"
                 className="btn-square btn-sm btn"
                 onClick={() => deleteFolderHandler(folder.id)}
+                //TODO open confirmation modal
               >
                 <TrashIcon />
               </button>
@@ -124,17 +107,6 @@ const Folder: NextPage = () => {
         />
         <div className="divider my-1 sm:my-2" />
         <NotesGridContainer notes={folder?.notes} dataStatus={status} />
-        {folder?.parentFolderId && (
-          <p className="py-2 text-xl underline">
-            <Link href={`/folders/${folder.parentFolderId}`}>
-              {`← Back to parent folder`}
-            </Link>
-          </p>
-        )}
-        {/* TODO get parent folder title with an include in the prisma query */}
-        <p className="py-2 text-xl underline">
-          <Link href="/folders">← Back to folders</Link>
-        </p>
       </Layout>
     </>
   );

@@ -30,29 +30,12 @@ const Folders: NextPage = () => {
       }
     );
 
-  const {
-    data: notes,
-    refetch: refetchNotes,
-    status: notesStatus,
-  } = api.note.getByFolderId.useQuery(
+  const { data: notes, status: notesStatus } = api.note.getByFolderId.useQuery(
     { folderId: null },
     {
       enabled: sessionData?.user !== undefined,
     }
   );
-
-  const createNote = api.note.create.useMutation({
-    onSuccess: () => {
-      void setIsNoteModalOpen(false);
-      void refetchNotes();
-    },
-  });
-
-  const createNoteHandler = (noteContent: string) => {
-    createNote.mutate({
-      content: noteContent,
-    });
-  };
 
   return (
     <>
@@ -88,7 +71,6 @@ const Folders: NextPage = () => {
               <CreateNoteModal
                 isOpen={isNoteModalOpen}
                 setIsOpen={setIsNoteModalOpen}
-                createFunction={createNoteHandler}
               />
             </>
           )}
