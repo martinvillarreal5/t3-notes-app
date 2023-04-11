@@ -20,12 +20,14 @@ const Folders: NextPage = () => {
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
 
-  //TODO Redirect to homepage if not logged or to guest folders page
+  //TODO Redirect to login page if not logged or to guest folders page
 
   const { data: folders, status: foldersStatus } =
     api.folder.getManyByParentFolderId.useQuery(
       { parentFolderId: null },
-      { enabled: sessionData?.user !== undefined }
+      {
+        enabled: sessionData?.user !== undefined,
+      }
     );
 
   const {
@@ -74,6 +76,7 @@ const Folders: NextPage = () => {
                 isOpen={isFolderModalOpen}
                 setIsOpen={setIsFolderModalOpen}
                 parentId={null}
+                folders={folders}
               />
               <button
                 title="Create Note"
