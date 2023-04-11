@@ -1,10 +1,6 @@
 //import { type Folder } from "@prisma/client";
 import Link from "next/link";
-
-type FolderMinimalInfo = {
-  id: string;
-  title: string;
-};
+import type { FolderMinimalInfo } from "~/types/minimalTypes";
 
 type folderGridProps = {
   folders: FolderMinimalInfo[];
@@ -13,15 +9,15 @@ type folderGridProps = {
 const FoldersGrid = ({ folders }: folderGridProps) => {
   return (
     <div
-      className="grid 
-        grid-cols-4 gap-2
+      className="xs:grid-cols-5 
+        grid grid-cols-4
+        gap-2 
         min-[364px]:grid-cols-5 
-        xs:grid-cols-5 
         sm:grid-cols-6 md:grid-cols-6
         md:gap-4 
         lg:grid-cols-8 
         xl:grid-cols-10
-        2xl:grid-cols-12"
+        2xl:grid-cols-10"
     >
       {folders.map((folder) => (
         <Link
@@ -33,8 +29,8 @@ const FoldersGrid = ({ folders }: folderGridProps) => {
           min-[500px]:px-2 "
         >
           <p
-            className="m-0 truncate 
-          text-xs text-base-content 
+            className="text-base-content m-0 
+          truncate text-xs 
           min-[500px]:text-sm sm:text-sm md:text-base xl:text-lg"
           >
             {folder.title}

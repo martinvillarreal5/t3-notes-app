@@ -1,12 +1,8 @@
 import type { Folder } from "@prisma/client";
-import Modal from "../ui/headlessUIModal";
+import type { FolderMinimalInfo } from "~/types/minimalTypes";
 import { useState } from "react";
 import { api } from "~/utils/api";
-
-type FolderMinimalInfo = {
-  id: string;
-  title: string;
-};
+import Modal from "../ui/headlessUIModal";
 
 type ModalProps = {
   isOpen: boolean;

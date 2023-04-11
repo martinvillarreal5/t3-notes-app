@@ -1,9 +1,6 @@
 import FoldersGrid from "./foldersGrid";
+import type { FolderMinimalInfo } from "~/types/minimalTypes";
 
-type FolderMinimalInfo = {
-  id: string;
-  title: string;
-};
 const FoldersGridContainer = ({
   folders,
   dataStatus,
