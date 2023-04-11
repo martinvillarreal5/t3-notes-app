@@ -3,21 +3,26 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import Drawer from "./ui/headlessUIDrawer";
+import FolderTree from "./folderTree";
 
 type layoutProps = {
+  extraNavbarContent?: React.ReactNode;
   children: React.ReactNode;
 };
 
-const Layout = ({ children }: layoutProps) => {
+const Layout = ({ extraNavbarContent, children }: layoutProps) => {
   const { status } = useSession();
   const [isNavOpen, setIsNavOpen] = useState(false);
   return (
     <>
-      <div className="bg-base-300 border-neutral sticky top-0 z-20 w-full  lg:border-b">
-        <div className="bg-base-300  mx-auto max-w-[90rem]  ">
+      <div
+        className="bg-base-300 border-neutral sticky top-0 z-20
+      w-full lg:border-b"
+      >
+        <div className="bg-base-300  mx-auto max-w-[90rem] ">
           <div className="bg-base-300 border-neutral mx-4 border-b py-4 lg:mx-0 lg:border-0 lg:px-8 ">
             <Link href="/">
-              <p className="text-2xl font-extrabold lg:text-3xl">
+              <p className="overflow-y-hidden text-2xl font-extrabold lg:text-3xl">
                 T3 <span className="text-accent">Note</span> App
               </p>
             </Link>
@@ -31,7 +36,7 @@ const Layout = ({ children }: layoutProps) => {
               >
                 <MenuIcon />
               </button>
-              <p className="">Breadcrumbs Here</p>
+              {extraNavbarContent && extraNavbarContent}
             </div>
           </div>
         </div>
@@ -54,6 +59,7 @@ const Layout = ({ children }: layoutProps) => {
               </li>
             )}
           </ul>
+          <FolderTree />
         </nav>
       </Drawer>
       <div className="overflow-hidden">
@@ -64,7 +70,7 @@ const Layout = ({ children }: layoutProps) => {
               top-[3rem] z-10 hidden w-[19.5rem]
               overflow-y-auto border-r px-8
               pb-10 pt-8
-              lg:top-[4.35rem] lg:block
+              lg:top-[4.25625rem] lg:block
             "
           >
             <nav>
@@ -81,6 +87,7 @@ const Layout = ({ children }: layoutProps) => {
                   </li>
                 )}
               </ul>
+              <FolderTree />
             </nav>
           </div>
           <div className="lg:pl-[19.5rem]">
