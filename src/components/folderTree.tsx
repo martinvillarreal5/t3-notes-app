@@ -7,7 +7,6 @@ import {
   FolderOpen as FolderOpenIcon,
   ChevronDown as ChevronDownIcon,
   ChevronRight as ChevronRightIcon,
-  Minus as MinusIcon,
 } from "lucide-react";
 import { api } from "~/utils/api";
 
@@ -91,7 +90,7 @@ const FolderTree = () => {
     <>
       {status === "loading" && <p className="text-xl">Loading</p>}
       {status === "success" && (
-        <Tree initialData={folderFamilyTree} rowHeight={34} width={248}>
+        <Tree data={folderFamilyTree} rowHeight={34} width={248}>
           {Node}
         </Tree>
       )}
