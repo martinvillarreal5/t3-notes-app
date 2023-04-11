@@ -1,11 +1,16 @@
-import { type Note } from "@prisma/client";
 import NotesGrid from "./notesGrid";
+
+type NoteMinimalInfo = {
+  id: string;
+  title: string | null;
+  content: string;
+};
 
 const NotesGridContainer = ({
   notes,
   dataStatus,
 }: {
-  notes?: Note[];
+  notes: NoteMinimalInfo[] | undefined;
   dataStatus: string;
 }) => {
   return (
@@ -14,7 +19,7 @@ const NotesGridContainer = ({
         <p className="py-4 text-2xl ">Loading Notes</p>
       )}
       {dataStatus === "error" && (
-        <p className="py-4 text-2xl text-error ">
+        <p className="text-error py-4 text-2xl ">
           An error ocurred fetching your notes
         </p>
       )}

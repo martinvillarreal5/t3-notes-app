@@ -8,7 +8,7 @@ const FoldersGridContainer = ({
   folders,
   dataStatus,
 }: {
-  folders?: FolderMinimalInfo[];
+  folders: FolderMinimalInfo[] | undefined;
   dataStatus: string;
 }) => {
   return (
@@ -17,7 +17,7 @@ const FoldersGridContainer = ({
         <p className="py-4 text-2xl ">Loading Folders</p>
       )}
       {dataStatus === "error" && (
-        <p className="py-4 text-2xl text-error">
+        <p className="text-error py-4 text-2xl">
           An error ocurred fetching your folders
         </p>
       )}
