@@ -30,13 +30,22 @@ const Folder: NextPage = () => {
     }
   );
 
+  const ctx = api.useContext();
+
   const parentFolderId = folder?.parentFolderId;
 
   const deleteFolder = api.folder.delete.useMutation({
     onSuccess: () => {
-      parentFolderId
-        ? void router.push(`/folders/${parentFolderId}`)
-        : void router.push(`/folders/`);
+      void ctx.folder.getFoldersTree.invalidate();
+      if (parentFolderId) {
+        void ctx.folder.getById.invalidate({ folderId: parentFolderId });
+        void router.push(`/folders/${parentFolderId}`);
+      } else {
+        void router.push(`/folders/`);
+        void ctx.folder.getManyByParentFolderId.invalidate({
+          parentFolderId: null,
+        });
+      }
     },
   });
 
