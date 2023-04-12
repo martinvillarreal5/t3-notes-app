@@ -42,9 +42,7 @@ const Folder: NextPage = () => {
         void router.push(`/folders/${parentFolderId}`);
       } else {
         void router.push(`/folders/`);
-        void ctx.folder.getManyByParentFolderId.invalidate({
-          parentFolderId: null,
-        });
+        void ctx.folder.getRootFolders.invalidate();
       }
     },
   });
