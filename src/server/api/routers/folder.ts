@@ -11,16 +11,14 @@ export const folderRouter = createTRPCRouter({
       },
     });
   }),
-  getManyByParentFolderId: protectedProcedure
-    .input(z.object({ parentFolderId: z.string().nullable() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.folder.findMany({
-        where: {
-          parentFolderId: input.parentFolderId,
-          userId: ctx.session.user.id,
-        },
-      });
-    }),
+  getRootFolders: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.folder.findMany({
+      where: {
+        parentFolderId: null,
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
   getById: protectedProcedure
     .input(z.object({ folderId: z.string() }))
     .query(async ({ ctx, input }) => {

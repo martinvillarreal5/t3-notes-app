@@ -32,9 +32,7 @@ const CreateFolderModal = ({
     onSuccess: () => {
       parentId
         ? void ctx.folder.getById.invalidate({ folderId: parentId })
-        : void ctx.folder.getManyByParentFolderId.invalidate({
-            parentFolderId: null,
-          });
+        : void ctx.folder.getRootFolders.invalidate();
       void ctx.folder.getFoldersTree.invalidate();
       void setError("");
       void setFolderTitle(""); //? Necesary?

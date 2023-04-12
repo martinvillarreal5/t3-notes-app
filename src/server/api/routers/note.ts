@@ -10,16 +10,14 @@ export const noteRouter = createTRPCRouter({
       },
     });
   }),
-  getByFolderId: protectedProcedure
-    .input(z.object({ folderId: z.string().nullable() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.note.findMany({
-        where: {
-          userId: ctx.session.user.id,
-          folderId: input.folderId,
-        },
-      });
-    }),
+  getRootNotes: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.note.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        folderId: null,
+      },
+    });
+  }),
   getById: protectedProcedure
     .input(z.object({ noteId: z.string() }))
     .query(({ ctx, input }) => {

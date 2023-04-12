@@ -21,9 +21,7 @@ const CreateNoteModal = ({
     onSuccess: () => {
       folderId
         ? void ctx.folder.getById.invalidate({ folderId: folderId })
-        : void ctx.note.getByFolderId.invalidate({
-            folderId: null,
-          });
+        : void ctx.note.getRootNotes.invalidate();
       void setIsOpen(false);
       void setNoteContent("");
     },

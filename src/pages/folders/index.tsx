@@ -23,15 +23,12 @@ const Folders: NextPage = () => {
   //TODO Redirect to login page if not logged or to guest folders page
 
   const { data: folders, status: foldersStatus } =
-    api.folder.getManyByParentFolderId.useQuery(
-      { parentFolderId: null },
-      {
-        enabled: sessionData?.user !== undefined,
-      }
-    );
+    api.folder.getRootFolders.useQuery(undefined, {
+      enabled: sessionData?.user !== undefined,
+    });
 
-  const { data: notes, status: notesStatus } = api.note.getByFolderId.useQuery(
-    { folderId: null },
+  const { data: notes, status: notesStatus } = api.note.getRootNotes.useQuery(
+    undefined,
     {
       enabled: sessionData?.user !== undefined,
     }
