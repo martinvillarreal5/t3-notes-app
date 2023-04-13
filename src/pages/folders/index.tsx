@@ -41,9 +41,8 @@ const Folders: NextPage = () => {
       </Head>
       <Layout>
         <div className="flex flex-row items-center gap-2 pb-3">
-          {/* <HomeIcon /> */}
           <h2 className="text-2xl sm:text-3xl">Folders</h2>
-          {sessionData?.user !== undefined && (
+          {foldersStatus === "success" && (
             <>
               <button
                 className="btn-square btn-sm btn"
