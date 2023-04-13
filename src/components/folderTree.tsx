@@ -17,6 +17,7 @@ import {
   Tree,
 } from "react-arborist";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 type Data = { id: string; name: string; children?: Data[] };
 
@@ -49,20 +50,24 @@ const FolderArrowButton = ({ node }: { node: NodeApi<Data> }) => {
 
 const Node = ({ node, style }: NodeRendererProps<any>) => {
   const { state, data } = node;
+  console.log(`${node.data.title}, depth:${node.rowIndex}`);
   return (
     <>
-      <div style={style} className="flex h-full flex-row items-center  gap-1">
+      <div
+        style={style}
+        className="flex h-full flex-row flex-nowrap items-center gap-1 truncate "
+      >
         <FolderArrowButton node={node} />
-        <Link
-          href={`/folders/${data.id}`}
-          className="flex h-full flex-row items-center gap-1"
-        >
+        <div className="h-6 w-6">
           {state.isOpen && data.children[0] ? (
-            <FolderOpenIcon />
+            <FolderOpenIcon size={24} />
           ) : (
-            <FolderIcon />
+            <FolderIcon size={24} />
           )}
-          <p className="truncate text-xl">{data.title}</p>
+        </div>
+
+        <Link href={`/folders/${data.id}`} className="truncate text-xl">
+          {data.title}
         </Link>
       </div>
     </>
@@ -83,6 +88,8 @@ const Node = ({ node, style }: NodeRendererProps<any>) => {
 }; */
 
 const FolderTree = () => {
+  const router = useRouter();
+  //const { folderId } = router.query as { folderId: string | undefined }; //TODO Find a better way?
   const { data: folderFamilyTree, status } =
     api.folder.getFoldersTree.useQuery();
 
@@ -90,7 +97,14 @@ const FolderTree = () => {
     <>
       {status === "loading" && <p className="text-xl">Loading</p>}
       {status === "success" && (
-        <Tree data={folderFamilyTree} rowHeight={34} width={248}>
+        <Tree
+          data={folderFamilyTree}
+          rowHeight={34}
+          width={248}
+          disableMultiSelection
+          /* selection={folderId}
+          selectionFollowsFocus */
+        >
           {Node}
         </Tree>
       )}
