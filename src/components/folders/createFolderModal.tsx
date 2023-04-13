@@ -101,8 +101,10 @@ const CreateFolderModal = ({
           //TODO Invalidate on mutation
           {...register("title")}
         />
-        {Error && <p className="text-error my-2">{Error}</p>}
-        {errors.title && errors.title.message}
+        {Error && <p className="text-error mt-2">{Error}</p>}
+        {errors.title && (
+          <p className="text-error mt-2">{errors.title.message}</p>
+        )}
         <div className="modal-action ">
           <button
             type="submit"
