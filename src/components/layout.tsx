@@ -1,9 +1,7 @@
-import { Menu as MenuIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useState } from "react";
 import Drawer from "./ui/headlessUIDrawer";
-import FolderTree from "./folderTree";
+import VerticalNavbar from "./verticalNavbar";
+import Topbar from "./topbar";
 
 type layoutProps = {
   extraNavbarContent?: React.ReactNode;
@@ -11,56 +9,15 @@ type layoutProps = {
 };
 
 const Layout = ({ extraNavbarContent, children }: layoutProps) => {
-  const { status } = useSession();
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isNavDrawerOpen, setIsNavDrawerOpen] = useState(false);
   return (
     <>
-      <div
-        className="bg-base-300 border-neutral sticky top-0 z-20
-      w-full lg:border-b"
-      >
-        <div className="bg-base-300  mx-auto max-w-[90rem] ">
-          <div className="bg-base-300 border-neutral mx-4 border-b py-4 lg:mx-0 lg:border-0 lg:px-8 ">
-            <Link href="/">
-              <p className="overflow-y-hidden text-2xl font-extrabold lg:text-3xl">
-                T3 <span className="text-accent">Note</span> App
-              </p>
-            </Link>
-          </div>
-          <div className="border-neutral border-b p-4 lg:hidden ">
-            <div className="flex w-full items-center">
-              <button
-                title="open menu"
-                className="btn-ghost btn-square btn-sm btn mr-4"
-                onClick={() => setIsNavOpen(true)}
-              >
-                <MenuIcon />
-              </button>
-              {extraNavbarContent && extraNavbarContent}
-            </div>
-          </div>
-        </div>
-      </div>
-      <Drawer isOpen={isNavOpen} setIsOpen={setIsNavOpen}>
-        <nav className="flex w-[15.5rem] flex-col pr-4">
-          <ul>
-            <li className="pb-4 text-xl">
-              <Link href="/">Home</Link>
-            </li>
-            {status === "loading" && <li>Loading</li>}
-            {status === "authenticated" && (
-              <li className="pb-4 text-xl ">
-                <Link href={"/account/profile"}>Profile</Link>
-              </li>
-            )}
-            {status === "authenticated" && (
-              <li className="pb-4 text-xl ">
-                <Link href={"/folders"}>Your Folders</Link>
-              </li>
-            )}
-          </ul>
-          <FolderTree />
-        </nav>
+      <Topbar
+        setIsNavDrawerOpen={setIsNavDrawerOpen}
+        mobileTopbarContent={extraNavbarContent}
+      />
+      <Drawer isOpen={isNavDrawerOpen} setIsOpen={setIsNavDrawerOpen}>
+        <VerticalNavbar />
       </Drawer>
       <div className="overflow-hidden">
         <div className="mx-auto	max-w-[90rem] px-4 pt-4 sm:px-6 md:px-8">
@@ -73,22 +30,7 @@ const Layout = ({ extraNavbarContent, children }: layoutProps) => {
               lg:top-[4.25625rem] lg:block
             "
           >
-            <nav>
-              <ul>
-                {status === "loading" && <li>Loading</li>}
-                {status === "authenticated" && (
-                  <li className="pb-4 text-xl ">
-                    <Link href={"/account/profile"}>Profile</Link>
-                  </li>
-                )}
-                {status === "authenticated" && (
-                  <li className="pb-4 text-xl ">
-                    <Link href={"/folders"}>Your Folders</Link>
-                  </li>
-                )}
-              </ul>
-              <FolderTree />
-            </nav>
+            <VerticalNavbar />
           </div>
           <div className="lg:pl-[19.5rem]">
             <div className="relative z-10 mx-auto max-w-3xl pt-6 xl:max-w-none">
