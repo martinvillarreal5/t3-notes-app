@@ -9,13 +9,15 @@ type folderGridProps = {
 const FoldersGrid = ({ folders }: folderGridProps) => {
   return (
     <div
-      className="xs:grid-cols-5 
-        grid grid-cols-4
+      className="
+        xs:grid-cols-6 
+        grid 
+        grid-cols-4
         gap-2 
         min-[364px]:grid-cols-5 
-        sm:grid-cols-6 md:grid-cols-6
-        md:gap-4 
-        lg:grid-cols-8 
+        sm:grid-cols-7 
+        md:grid-cols-7 md:gap-4 
+        lg:grid-cols-7 
         xl:grid-cols-10
         2xl:grid-cols-10"
     >
@@ -23,15 +25,15 @@ const FoldersGrid = ({ folders }: folderGridProps) => {
         <Link
           href={`/folders/${folder.id}`}
           key={folder.id}
-          className="folder h-12
-          items-end justify-start
-          px-1 py-1 normal-case shadow-xl
-          min-[500px]:px-2 "
+          className="folder h-10 items-end
+          justify-start px-1
+          py-1 normal-case shadow-xl min-[500px]:px-2
+          sm:h-12 lg:h-14"
         >
           <p
             className="text-base-content m-0 
-          truncate text-xs 
-          min-[500px]:text-sm sm:text-sm md:text-base xl:text-lg"
+          truncate text-sm
+          sm:text-base lg:text-lg "
           >
             {folder.title}
           </p>
