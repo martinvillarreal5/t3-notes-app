@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* * {
+  overflow-x: hidden;
+} */
+[role="treeitem"] {
+  padding-left: 0.25rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 400;
+  user-select: none;
+  /* @apply truncate; */
+}
+[role="treeitem"]:hover {
+  @apply bg-neutral-focus;
+}
+
+[role="treeitem"][aria-selected="true"] {
+  @apply bg-neutral-focus;
+}
+
 .folder {
   display: flex;
   border-width: 0px;

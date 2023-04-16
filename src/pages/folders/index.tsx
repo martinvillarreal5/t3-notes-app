@@ -20,62 +20,19 @@ const Folders: NextPage = () => {
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
 
-  //TODO Redirect to homepage if not logged or to guest folders page
+  //TODO Redirect to login page if not logged or to guest folders page
 
-  const {
-    data: folders,
-    refetch: refetchFolders,
-    status: foldersStatus,
-  } = api.folder.getByParentFolderId.useQuery(
-    { parentFolderId: null },
-    { enabled: sessionData?.user !== undefined }
-  );
+  const { data: folders, status: foldersStatus } =
+    api.folder.getRootFolders.useQuery(undefined, {
+      enabled: sessionData?.user !== undefined,
+    });
 
-  const {
-    data: notes,
-    refetch: refetchNotes,
-    status: notesStatus,
-  } = api.note.getByFolderId.useQuery(
-    { folderId: null },
+  const { data: notes, status: notesStatus } = api.note.getRootNotes.useQuery(
+    undefined,
     {
       enabled: sessionData?.user !== undefined,
     }
   );
-
-  const createFolder = api.folder.create.useMutation({
-    onSuccess: () => {
-      void setIsFolderModalOpen(false);
-      void refetchFolders();
-    },
-    //Check onMutation and onError
-  });
-
-  const createFolderHandler = (newFolderTitle: string) => {
-    if (folders?.some((folder) => folder.title === newFolderTitle)) {
-      //? We cant use a compound unique constraint in the prisma schema like [userId, title, parentId]
-      //? because parentId can be null
-      //? https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#unique-1
-      //? https://github.com/prisma/prisma/issues/3197console.log("Repeated folder title");
-      //TODO throw error
-      return;
-    }
-    createFolder.mutate({
-      title: newFolderTitle,
-    });
-  };
-
-  const createNote = api.note.create.useMutation({
-    onSuccess: () => {
-      void setIsNoteModalOpen(false);
-      void refetchNotes();
-    },
-  });
-
-  const createNoteHandler = (noteContent: string) => {
-    createNote.mutate({
-      content: noteContent,
-    });
-  };
 
   return (
     <>
@@ -84,9 +41,8 @@ const Folders: NextPage = () => {
       </Head>
       <Layout>
         <div className="flex flex-row items-center gap-2 pb-3">
-          {/* <HomeIcon /> */}
           <h2 className="text-2xl sm:text-3xl">Folders</h2>
-          {sessionData?.user !== undefined && (
+          {foldersStatus === "success" && (
             <>
               <button
                 className="btn-square btn-sm btn"
@@ -98,7 +54,8 @@ const Folders: NextPage = () => {
               <CreateFolderModal
                 isOpen={isFolderModalOpen}
                 setIsOpen={setIsFolderModalOpen}
-                createFunction={createFolderHandler}
+                parentId={null}
+                folders={folders}
               />
               <button
                 title="Create Note"
@@ -110,7 +67,6 @@ const Folders: NextPage = () => {
               <CreateNoteModal
                 isOpen={isNoteModalOpen}
                 setIsOpen={setIsNoteModalOpen}
-                createFunction={createNoteHandler}
               />
             </>
           )}

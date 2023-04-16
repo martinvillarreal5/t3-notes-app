@@ -1,26 +1,38 @@
 import { useState } from "react";
+import { api } from "~/utils/api";
 import Modal from "../ui/headlessUIModal";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
-  createFunction: (noteContent: string) => void;
+  folderId?: string | null;
   folderTitle?: string;
 };
 
 const CreateNoteModal = ({
   isOpen,
   setIsOpen,
-  createFunction,
+  folderId = null,
   folderTitle,
 }: ModalProps) => {
   const [noteContent, setNoteContent] = useState("");
+
+  const ctx = api.useContext();
+  const createNote = api.note.create.useMutation({
+    onSuccess: () => {
+      folderId
+        ? void ctx.folder.getById.invalidate({ folderId: folderId })
+        : void ctx.note.getRootNotes.invalidate();
+      void setIsOpen(false);
+      void setNoteContent("");
+    },
+  });
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const target = e.target as typeof e.target & {
-      noteContent: { value: string };
-    };
-    createFunction(target.noteContent.value);
-    setNoteContent("");
+    createNote.mutate({
+      content: noteContent,
+      folderId: folderId,
+    });
   };
   return (
     <Modal
@@ -29,7 +41,7 @@ const CreateNoteModal = ({
       title="Create Note"
       description={
         folderTitle
-          ? `Add a new note in "${folderTitle}" to your account.`
+          ? `Add a new note in the "${folderTitle}" folder to your account.`
           : "Add a new note to your account."
       }
     >
@@ -48,7 +60,7 @@ const CreateNoteModal = ({
           </button>
           <button
             type="button"
-            className="btn-error btn "
+            className="btn-error btn"
             onClick={() => setIsOpen(false)}
           >
             Cancel

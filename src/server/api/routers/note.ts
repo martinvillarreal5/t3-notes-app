@@ -10,16 +10,14 @@ export const noteRouter = createTRPCRouter({
       },
     });
   }),
-  getByFolderId: protectedProcedure
-    .input(z.object({ folderId: z.string().nullable() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.note.findMany({
-        where: {
-          userId: ctx.session.user.id,
-          folderId: input.folderId,
-        },
-      });
-    }),
+  getRootNotes: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.note.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        folderId: null,
+      },
+    });
+  }),
   getById: protectedProcedure
     .input(z.object({ noteId: z.string() }))
     .query(({ ctx, input }) => {
@@ -35,32 +33,26 @@ export const noteRouter = createTRPCRouter({
       z.object({
         content: z.string(),
         title: z.string().optional(),
+        folderId: z.string().nullable(),
       })
     )
     .mutation(({ ctx, input }) => {
+      const createFields = {
+        content: input.content,
+        title: input.title,
+        user: { connect: { id: ctx.session.user.id } },
+      };
+      if (input.folderId) {
+        return ctx.prisma.note.create({
+          data: {
+            ...createFields,
+            folder: { connect: { id: input.folderId } },
+          },
+        });
+      }
       return ctx.prisma.note.create({
         data: {
-          content: input.content,
-          title: input.title,
-          user: { connect: { id: ctx.session.user.id } },
-        },
-      });
-    }),
-  createFolderNote: protectedProcedure
-    .input(
-      z.object({
-        content: z.string(),
-        title: z.string().optional(),
-        folderId: z.string(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.note.create({
-        data: {
-          content: input.content,
-          title: input.title,
-          user: { connect: { id: ctx.session.user.id } },
-          folder: { connect: { id: input.folderId } },
+          ...createFields,
         },
       });
     }),
