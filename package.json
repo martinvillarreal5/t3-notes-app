@@ -22,7 +22,7 @@
     "daisyui": "^2.51.5",
     "lucide-react": "^0.127.0",
     "next": "13.2.1",
-    "next-auth": "^4.19.0",
+    "next-auth": "^4.21.1",
     "performant-array-to-tree": "^1.11.0",
     "react": "18.2.0",
     "react-arborist": "^3.0.2",
