@@ -10,8 +10,14 @@ const NavbarItem = ({
   href: string;
 }) => {
   return (
-    <li className="hover:bg-neutral-focus focus:bg-neutral-focus w-full rounded-md py-2 pl-1 text-xl">
-      <Link href={href}>{children}</Link>
+    <li>
+      <Link
+        className="hover:bg-neutral-focus focus:bg-neutral-focus block w-full rounded-md 
+        py-1 pl-1 text-xl"
+        href={href}
+      >
+        {children}
+      </Link>
     </li>
   );
 };
