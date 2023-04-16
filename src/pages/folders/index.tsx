@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-import Layout from "~/components/layout";
+import Layout from "~/components/layout/layout";
 import { api } from "~/utils/api";
 import { useState } from "react";
 import CreateFolderModal from "~/components/folders/createFolderModal";
