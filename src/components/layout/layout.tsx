@@ -20,14 +20,14 @@ const Layout = ({ extraNavbarContent, children }: layoutProps) => {
         <VerticalNavbar />
       </Drawer>
       <div className="overflow-hidden">
-        <div className="mx-auto	max-w-[90rem] px-4 pt-4 sm:px-6 md:px-8">
+        <div className="mx-auto max-w-[90rem] px-4 pt-4 sm:px-6 md:px-8">
           <div
             className="border-neutral fixed 
               inset-0 left-[max(0px,calc(50%-45rem))] right-auto
-              top-[3rem] z-10 hidden w-[19.5rem]
+              z-10 hidden w-[19.5rem]
               overflow-y-auto border-r px-8
               pb-10 pt-8
-              lg:top-[4.25625rem] lg:block
+              lg:top-[4.313rem] lg:block
             "
           >
             <VerticalNavbar />
