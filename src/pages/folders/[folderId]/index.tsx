@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import {
@@ -17,11 +17,19 @@ import NotesGridContainer from "~/components/notes/notesGridContainer";
 import FolderBreadcrumbs from "~/components/folders/folderBreadcrumbs";
 
 const Folder: NextPage = () => {
+  const router = useRouter();
+  const { data: sessionData, status: sessionStatus } = useSession();
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      console.log(sessionStatus);
+      void router.push("/signin");
+    }
+  }, [router, sessionStatus]);
+
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-  const router = useRouter();
+
   const { folderId } = router.query as { folderId: string }; //TODO Find a better way?
-  const { data: sessionData } = useSession();
 
   const { data: folder, status } = api.folder.getById.useQuery(
     { folderId: folderId },

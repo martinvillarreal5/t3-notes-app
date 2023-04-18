@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useSession } from "next-auth/react";
 import Layout from "~/components/layout/layout";
 import { api } from "~/utils/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
 
@@ -14,13 +14,20 @@ import {
 } from "lucide-react";
 import FoldersGridContainer from "~/components/folders/foldersGridContainer";
 import NotesGridContainer from "~/components/notes/notesGridContainer";
+import { useRouter } from "next/router";
 
 const Folders: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const router = useRouter();
+  const { data: sessionData, status: sessionStatus } = useSession();
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      console.log(sessionStatus);
+      void router.push("/signin");
+    }
+  }, [router, sessionStatus]);
+
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-
-  //TODO Redirect to login page if not logged or to guest folders page
 
   const { data: folders, status: foldersStatus } =
     api.folder.getRootFolders.useQuery(undefined, {

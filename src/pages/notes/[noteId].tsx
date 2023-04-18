@@ -5,10 +5,18 @@ import { useRouter } from "next/router";
 import Layout from "~/components/layout/layout";
 import { api } from "~/utils/api";
 import { Trash2 as TrashIcon } from "lucide-react";
+import { useEffect } from "react";
 
 const Note: NextPage = () => {
-  const { data: sessionData } = useSession();
   const router = useRouter();
+  const { data: sessionData, status: sessionStatus } = useSession();
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      console.log(sessionStatus);
+      void router.push("/signin");
+    }
+  }, [router, sessionStatus]);
+
   const { noteId } = router.query as { noteId: string }; //TODO Find a better way?
   const { data: note, status } = api.note.getById.useQuery(
     { noteId: noteId },
