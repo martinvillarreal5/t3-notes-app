@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import FolderTree from "./folderTree";
+import FolderTree from "../folders/folderTree";
 
 const NavbarItem = ({
   children,

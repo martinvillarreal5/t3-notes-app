@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Drawer from "./ui/headlessUIDrawer";
+import Drawer from "../ui/headlessUIDrawer";
 import VerticalNavbar from "./verticalNavbar";
 import Topbar from "./topbar";
 

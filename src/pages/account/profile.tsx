@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Layout from "~/components/layout";
+import Layout from "~/components/layout/layout";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 

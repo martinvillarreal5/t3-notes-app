@@ -1,4 +1,5 @@
 import type { Note } from "@prisma/client";
+import Link from "next/link";
 
 type notesGridProps = {
   notes: Note[];
@@ -18,11 +19,12 @@ const NotesGrid = ({ notes }: notesGridProps) => {
         2xl:grid-cols-4"
       >
         {notes.map((note) => (
-          <div
+          <Link
             //sm:h-72 md:h-96 h-60
-            className="bg-neutral h-[11rem] p-2 shadow-xl
-            md:h-[13rem]
+            className="bg-neutral pointer-events-auto h-[11rem] p-2
+            shadow-xl md:h-[13rem]
             "
+            href={`/notes/${note.id}`}
             key={note.id}
           >
             <p
@@ -34,7 +36,7 @@ const NotesGrid = ({ notes }: notesGridProps) => {
             >
               {note.content}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

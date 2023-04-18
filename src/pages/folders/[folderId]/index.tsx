@@ -9,12 +9,12 @@ import {
   FilePlus as FilePlusIcon,
   Trash2 as TrashIcon,
 } from "lucide-react";
-import Layout from "~/components/layout";
+import Layout from "~/components/layout/layout";
 import CreateFolderModal from "~/components/folders/createFolderModal";
 import CreateNoteModal from "~/components/notes/createNoteModal";
 import FoldersGridContainer from "~/components/folders/foldersGridContainer";
 import NotesGridContainer from "~/components/notes/notesGridContainer";
-import FolderBreadcrumbs from "~/components/folderBreadcrumbs";
+import FolderBreadcrumbs from "~/components/folders/folderBreadcrumbs";
 
 const Folder: NextPage = () => {
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);

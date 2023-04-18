@@ -21,10 +21,28 @@ export const noteRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ noteId: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.note.findFirst({
+      return ctx.prisma.note.findFirstOrThrow({
         where: {
           userId: ctx.session.user.id,
           id: input.noteId,
+        },
+        include: {
+          folder: { select: { id: true, title: true } },
+        },
+      });
+    }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        noteId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.note.deleteMany({
+        where: {
+          id: input.noteId,
+          userId: ctx.session.user.id,
         },
       });
     }),

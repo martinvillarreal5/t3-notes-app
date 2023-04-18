@@ -18,6 +18,7 @@ import {
 } from "react-arborist";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 type Data = { id: string; name: string; children?: Data[] };
 
@@ -89,9 +90,15 @@ const Node = ({ node, style }: NodeRendererProps<any>) => {
 
 const FolderTree = () => {
   const router = useRouter();
+  const { data: sessionData } = useSession();
+
   //const { folderId } = router.query as { folderId: string | undefined }; //TODO Find a better way?
-  const { data: folderFamilyTree, status } =
-    api.folder.getFoldersTree.useQuery();
+  const { data: folderFamilyTree, status } = api.folder.getFoldersTree.useQuery(
+    undefined,
+    {
+      enabled: sessionData?.user !== undefined,
+    }
+  );
 
   return (
     <>

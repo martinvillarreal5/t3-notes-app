@@ -23,7 +23,7 @@ export const folderRouter = createTRPCRouter({
     .input(z.object({ folderId: z.string() }))
     .query(async ({ ctx, input }) => {
       //TODO make a single $rawQuery using a recursive query
-
+      //TODO replace recursive function with loop
       const folder = await ctx.prisma.folder.findFirstOrThrow({
         where: {
           id: input.folderId,
@@ -32,7 +32,7 @@ export const folderRouter = createTRPCRouter({
         include: {
           subFolders: { select: { id: true, title: true } },
           parentFolder: {
-            select: { id: true, title: true },
+            select: { id: true, title: true, parentFolderId: true },
           },
           notes: true,
         },
@@ -48,7 +48,7 @@ export const folderRouter = createTRPCRouter({
         ancestors: [],
       };
       const findAncestorAndPushToAncestorsArray = async (id: string) => {
-        const folder = await ctx.prisma.folder.findFirstOrThrow({
+        const ancestor = await ctx.prisma.folder.findFirstOrThrow({
           where: {
             id: id,
             userId: ctx.session.user.id,
@@ -57,19 +57,44 @@ export const folderRouter = createTRPCRouter({
             id: true,
             title: true,
             parentFolderId: true,
+            parentFolder: {
+              select: { id: true, title: true, parentFolderId: true },
+            },
           },
         });
+        //We add this ancestor to the ancestors array
         folderWithAncestors.ancestors.unshift({
-          id: folder.id,
-          title: folder.title,
+          id: ancestor.id,
+          title: ancestor.title,
         });
-        if (folder.parentFolderId) {
-          await findAncestorAndPushToAncestorsArray(folder.parentFolderId);
+        if (ancestor.parentFolder) {
+          //If ancestor has a parent we add it to ancestors array
+          folderWithAncestors.ancestors.unshift({
+            id: ancestor.parentFolder.id,
+            title: ancestor.parentFolder.title,
+          });
+          if (ancestor.parentFolder.parentFolderId) {
+            //If ancestor has a grandparent, we call findAncestorAndPushToAncestorsArray recursively
+            await findAncestorAndPushToAncestorsArray(
+              ancestor.parentFolder.parentFolderId
+            );
+          }
         }
       };
 
-      if (folder.parentFolderId) {
-        await findAncestorAndPushToAncestorsArray(folder.parentFolderId);
+      if (folder.parentFolder) {
+        //If folder has a parent we add it to ancestors array
+        folderWithAncestors.ancestors.unshift({
+          id: folder.parentFolder.id,
+          title: folder.parentFolder.title,
+        });
+        if (folder.parentFolder.parentFolderId) {
+          //If folder has a grandparent,
+          //We find its ancestors, starting from its grandparent, and add them to ancestors array
+          await findAncestorAndPushToAncestorsArray(
+            folder.parentFolder.parentFolderId
+          );
+        }
       }
       return folderWithAncestors;
     }),
