@@ -9,15 +9,8 @@ import {
   ChevronRight as ChevronRightIcon,
 } from "lucide-react";
 import { api } from "~/utils/api";
-
-import {
-  type NodeRendererProps,
-  type NodeApi,
-  //type RowRendererProps,
-  Tree,
-} from "react-arborist";
+import { type NodeRendererProps, type NodeApi, Tree } from "react-arborist";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 type Data = { id: string; name: string; children?: Data[] };
@@ -46,12 +39,15 @@ const FolderArrowButton = ({ node }: { node: NodeApi<Data> }) => {
       </button>
     );
   }
-  return <div className="invisible block h-6 w-6" />;
+  return (
+    <div className="invisible block h-6 w-6">
+      <ChevronRightIcon />
+    </div>
+  );
 };
 
 const Node = ({ node, style }: NodeRendererProps<any>) => {
   const { state, data } = node;
-  console.log(`${node.data.title}, depth:${node.rowIndex}`);
   return (
     <>
       <div
@@ -74,25 +70,8 @@ const Node = ({ node, style }: NodeRendererProps<any>) => {
     </>
   );
 };
-
-/* const Row = ({ node, attrs, children }: RowRendererProps<any>) => {
-  const nodeDepth = attrs["aria-level"];
-  return (
-    <div
-      {...attrs}
-      onFocus={(e) => e.stopPropagation()}
-      onClick={node.handleClick}
-    >
-      {children}
-    </div>
-  );
-}; */
-
 const FolderTree = () => {
-  const router = useRouter();
   const { data: sessionData } = useSession();
-
-  //const { folderId } = router.query as { folderId: string | undefined }; //TODO Find a better way?
   const { data: folderFamilyTree, status } = api.folder.getFoldersTree.useQuery(
     undefined,
     {
