@@ -74,4 +74,36 @@ export const noteRouter = createTRPCRouter({
         },
       });
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        noteId: z.string(),
+        title: z
+          .string()
+          .max(50, {
+            message: "Note title must be 50 characters long or less.",
+          })
+          .optional(),
+        content: z
+          .string()
+          .min(1, { message: "Note content is required." })
+          .max(65535, {
+            message: "Note content must be 65,535 characters long or less.",
+          })
+          .optional(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      // ? We use updateMany because update dont accept non unique parameters in the 'where' object
+      return ctx.prisma.note.updateMany({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.noteId,
+        },
+        data: {
+          title: input.title,
+          content: input.title,
+        },
+      });
+    }),
 });
