@@ -21,6 +21,10 @@ const noteFormSchema = z.object({
 type FormData = z.infer<typeof noteFormSchema>;
 
 const UpdateNoteForm = ({ note }: { note: Note }) => {
+  const defaultValues = {
+    title: note.title || "",
+    content: note.content,
+  };
   const {
     register,
     handleSubmit,
@@ -28,10 +32,7 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
     formState: { errors, dirtyFields, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(noteFormSchema),
-    defaultValues: {
-      title: note.title ? note.title : undefined,
-      content: note.content,
-    },
+    defaultValues: defaultValues,
   });
   const onSubmit = (data: FormData) => {
     if (isDirty) {
@@ -39,12 +40,11 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
       const updateData: UpdateData = {
         noteId: note.id,
       };
+
       const dirtyFieldsArray = Object.keys(dirtyFields);
-      console.log(dirtyFieldsArray);
       dirtyFieldsArray.forEach((key) => {
         updateData[key as keyof FormData] = data[key as keyof FormData];
       });
-      console.log(updateData);
     } else console.log("No fields where modified"); //TODO show toast
     resetForm(undefined, {
       keepValues: true,
@@ -54,11 +54,17 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
   return (
     <>
       <form className="" onSubmit={handleSubmit(onSubmit)}>
+        {
+          <button type="submit" className="btn btn-success">
+            Save changes
+          </button>
+        }
         <input
           type="text"
           placeholder="Add a title"
           className="bg-base-300 w-full resize-none text-xl outline-none sm:text-2xl"
           autoComplete="off"
+          spellCheck="false"
           {...register("title")}
         />
         {errors.title && (
@@ -70,17 +76,14 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
           spellCheck="false"
           placeholder="Note Content"
           //defaultValue={note.content}
-          minRows={4}
+          minRows={1}
           className="bg-base-300 mt-3 w-full resize-none
           overflow-y-hidden text-base outline-none sm:text-xl"
           {...register("content")}
         />
         {errors.content && (
-          <p className="text-error mt-2">{errors.content.message}</p>
+          <p className="text-error ">{errors.content.message}</p>
         )}
-        <button type="submit" className="btn btn-success">
-          ok
-        </button>
       </form>
     </>
   );
