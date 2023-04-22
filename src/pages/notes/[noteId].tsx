@@ -4,8 +4,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "~/components/layout/layout";
 import { api } from "~/utils/api";
-import { Trash2 as TrashIcon } from "lucide-react";
 import { useEffect } from "react";
+import UpdateNoteForm from "~/components/notes/updateNoteForm";
+import DeleteNoteButton from "~/components/notes/deleteNoteButton";
 
 const Note: NextPage = () => {
   const router = useRouter();
@@ -24,18 +25,6 @@ const Note: NextPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   );
-  const ctx = api.useContext();
-  const deleteNote = api.note.delete.useMutation({
-    onSuccess: () => {
-      if (note?.folderId) {
-        void ctx.folder.getById.invalidate({ folderId: note.folderId });
-        void router.push(`/folders/${note.folderId}`);
-      } else {
-        void ctx.note.getRootNotes.invalidate();
-        void router.push(`/folders`);
-      }
-    },
-  });
 
   return (
     <>
@@ -48,24 +37,13 @@ const Note: NextPage = () => {
         )}
         {status === "success" && (
           <>
-            <h2 className=" mb-2 text-2xl sm:text-3xl">
-              {note.title && note.title.length > 0
-                ? note.title
-                : `Note added ${note.createdAt.toLocaleString()}`}
-            </h2>
-            <button
-              title="Delete this note"
-              className="btn-square btn-sm btn mb-2"
-              onClick={() => deleteNote.mutate({ noteId: note.id })}
-            >
-              <TrashIcon />
-            </button>
-            <div
-              className="bg-neutral flex flex-row items-end gap-2 p-2"
-              style={{ whiteSpace: "pre-wrap" }}
-            >
-              {note.content}
+            <div className="flex flex-col">
+              <div className="flex flex-row items-center gap-3">
+                <DeleteNoteButton noteId={note.id} folderId={note.folderId} />
+              </div>
             </div>
+
+            <UpdateNoteForm note={note} />
           </>
         )}
       </Layout>
