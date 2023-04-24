@@ -2,7 +2,7 @@ import type { Folder } from "@prisma/client";
 import type { FolderMinimalInfo } from "~/types/minimalTypes";
 import { useState } from "react";
 import { api } from "~/utils/api";
-import Modal from "../ui/headlessUIModal";
+import Modal from "../ui/modal";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
