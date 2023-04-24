@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "~/utils/api";
-import Modal from "../ui/modal";
+import { Modal, ModalDescription, ModalPanel, ModalTitle } from "../ui/modal";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
@@ -35,16 +35,15 @@ const CreateNoteModal = ({
     });
   };
   return (
-    <Modal
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      title="Create Note"
-      description={
-        folderTitle
-          ? `Add a new note in the "${folderTitle}" folder to your account.`
-          : "Add a new note to your account."
-      }
-    >
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <ModalPanel>
+        <ModalTitle>Create Note</ModalTitle>
+        <ModalDescription>
+          {folderTitle
+            ? `Add a new note in the "${folderTitle}" folder to your account.`
+            : "Add a new note to your account."}
+        </ModalDescription>
+      </ModalPanel>
       <form onSubmit={handleSubmit}>
         <textarea
           name="noteContent"

@@ -2,7 +2,7 @@ import type { Folder } from "@prisma/client";
 import type { FolderMinimalInfo } from "~/types/minimalTypes";
 import { useState } from "react";
 import { api } from "~/utils/api";
-import Modal from "../ui/modal";
+import { Modal, ModalDescription, ModalPanel, ModalTitle } from "../ui/modal";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,47 +90,46 @@ const CreateFolderModal = ({
     });
   };
   return (
-    <Modal
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      title="Create Folder"
-      description={
-        parentTitle
-          ? `Add a new sub-folder in the '${parentTitle}' directory to your account.`
-          : `Add a new folder to your account.`
-      }
-    >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          placeholder="Folder Title"
-          className="input-bordered input input-sm sm:input-md mt-2.5 w-full"
-          autoComplete="off"
-          disabled={isMutating}
-          {...register("title")}
-        />
-        {Error && <p className="text-error mt-2">{Error}</p>}
-        {errors.title && (
-          <p className="text-error mt-2">{errors.title.message}</p>
-        )}
-        <div className="modal-action ">
-          <button
-            type="submit"
-            className="btn-success btn"
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <ModalPanel>
+        <ModalTitle>Create Folder</ModalTitle>
+        <ModalDescription>
+          {parentTitle
+            ? `Add a new sub-folder in the '${parentTitle}' directory to your account.`
+            : `Add a new folder to your account.`}
+        </ModalDescription>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            type="text"
+            placeholder="Folder Title"
+            className="input-bordered input input-sm sm:input-md mt-2.5 w-full"
+            autoComplete="off"
             disabled={isMutating}
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            className="btn-error btn"
-            onClick={() => setIsOpen(false)}
-            disabled={isMutating}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+            {...register("title")}
+          />
+          {Error && <p className="text-error mt-2">{Error}</p>}
+          {errors.title && (
+            <p className="text-error mt-2">{errors.title.message}</p>
+          )}
+          <div className="modal-action ">
+            <button
+              type="submit"
+              className="btn-success btn"
+              disabled={isMutating}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn-error btn"
+              onClick={() => setIsOpen(false)}
+              disabled={isMutating}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </ModalPanel>
     </Modal>
   );
 };
