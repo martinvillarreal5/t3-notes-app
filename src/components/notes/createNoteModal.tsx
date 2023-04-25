@@ -43,29 +43,30 @@ const CreateNoteModal = ({
             ? `Add a new note in the "${folderTitle}" folder to your account.`
             : "Add a new note to your account."}
         </ModalDescription>
+
+        <form onSubmit={handleSubmit}>
+          <textarea
+            name="noteContent"
+            className=" textarea-bordered textarea mt-2.5 h-80 w-full"
+            placeholder="Note Content"
+            autoComplete="off"
+            value={noteContent}
+            onChange={(e) => setNoteContent(e.target.value)}
+          />
+          <div className="modal-action gap-2">
+            <button type="submit" className="btn-success btn">
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn-error btn"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </ModalPanel>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          name="noteContent"
-          className=" textarea-bordered textarea mt-2.5 h-80 w-full"
-          placeholder="Note Content"
-          autoComplete="off"
-          value={noteContent}
-          onChange={(e) => setNoteContent(e.target.value)}
-        />
-        <div className="modal-action gap-2">
-          <button type="submit" className="btn-success btn">
-            Save
-          </button>
-          <button
-            type="button"
-            className="btn-error btn"
-            onClick={() => setIsOpen(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
     </Modal>
   );
 };
