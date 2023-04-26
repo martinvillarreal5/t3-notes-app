@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Drawer from "../ui/drawer";
+import { Drawer } from "../ui/drawer";
 import VerticalNavbar from "./verticalNavbar";
 import Topbar from "./topbar";
 
@@ -19,7 +19,7 @@ const Layout = ({ extraNavbarContent, children }: layoutProps) => {
       <Drawer isOpen={isNavDrawerOpen} setIsOpen={setIsNavDrawerOpen}>
         <VerticalNavbar />
       </Drawer>
-      <div className="overflow-hidden">
+      <div className="min-h-[calc(100%-4.313rem)] overflow-hidden">
         <div className="mx-auto max-w-[90rem] px-4 pt-4 sm:px-6 md:px-8">
           <div
             className="border-neutral fixed 
