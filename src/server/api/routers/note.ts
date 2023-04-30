@@ -102,7 +102,7 @@ export const noteRouter = createTRPCRouter({
         },
         data: {
           title: input.title,
-          content: input.title,
+          content: input.content,
         },
       });
     }),
