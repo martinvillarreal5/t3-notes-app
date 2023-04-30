@@ -13,8 +13,8 @@ const Home: NextPage = () => {
         <title>T3 Notes App</title>
       </Head>
       <Topbar home />
-      <div className="flex flex-col items-center	">
-        <p className="pb-4 pt-2 text-center text-5xl font-extrabold ">
+      <div className="flex flex-col items-center	pt-12">
+        <p className="pb-4 text-center text-5xl font-extrabold ">
           Effortlessly create <span className="text-primary">notes</span>,
           organize them in <span className="text-secondary">folders</span>
         </p>
