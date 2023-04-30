@@ -3,11 +3,15 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutosize from "react-textarea-autosize";
+import { useState } from "react";
+import { Save as SaveIcon } from "lucide-react";
+import { api } from "~/utils/api";
+import DeleteNoteButton from "~/components/notes/deleteNoteButton";
 
 const noteFormSchema = z.object({
   title: z
     .string()
-    .max(50, { message: "Note title must be 50 characters long or less." })
+    .max(30, { message: "Note title must be 30 characters long or less." })
     .optional(),
   content: z
     .string()
@@ -20,7 +24,11 @@ const noteFormSchema = z.object({
 
 type FormData = z.infer<typeof noteFormSchema>;
 
-const UpdateNoteForm = ({ note }: { note: Note }) => {
+type UpdateNoteFormProps = {
+  note: Note;
+};
+
+const UpdateNoteForm = ({ note }: UpdateNoteFormProps) => {
   const defaultValues = {
     title: note.title || "",
     content: note.content,
@@ -29,10 +37,29 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
     register,
     handleSubmit,
     reset: resetForm,
-    formState: { errors, dirtyFields, isDirty },
+    formState: { errors, isValid, dirtyFields, isDirty },
   } = useForm<FormData>({
+    mode: "onChange",
     resolver: zodResolver(noteFormSchema),
     defaultValues: defaultValues,
+  });
+  const [isServerError, setIsServerError] = useState(false);
+  const [isMutating, setIsMutating] = useState(false);
+  const ctx = api.useContext();
+
+  const updateNote = api.note.update.useMutation({
+    onMutate: () => {
+      void setIsMutating(true);
+    },
+    onError: () => {
+      void setIsServerError(true); //TODO Trow Toast
+      void resetForm();
+    },
+    onSettled: () => {
+      void setIsMutating(false);
+      void ctx.note.getById.invalidate({ noteId: note.id });
+      console.log("settled");
+    },
   });
   const onSubmit = (data: FormData) => {
     if (isDirty) {
@@ -45,6 +72,8 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
       dirtyFieldsArray.forEach((key) => {
         updateData[key as keyof FormData] = data[key as keyof FormData];
       });
+      updateNote.mutate({ ...updateData });
+      resetForm({ ...data });
     } else console.log("No fields where modified"); //TODO show toast
     resetForm(undefined, {
       keepValues: true,
@@ -54,19 +83,34 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
   return (
     <>
       <form className="" onSubmit={handleSubmit(onSubmit)}>
-        {
-          <button type="submit" className="btn btn-success">
-            Save changes
+        <div className="flex flex-row gap-3">
+          {/* <button title="More" className="btn-square btn-sm btn">
+            <MenuIcon />
+          </button> */}
+          <DeleteNoteButton
+            noteId={note.id}
+            folderId={note.folderId}
+            noteTitle={note.title}
+            disabled={isMutating}
+          />
+          <button
+            title="Save Changes"
+            type="submit"
+            className="btn-square btn-sm btn btn-success"
+            disabled={isMutating || !isDirty || !isValid}
+          >
+            <SaveIcon />
           </button>
-        }
-        <input
-          type="text"
-          placeholder="Add a title"
-          className="bg-base-300 w-full resize-none text-xl outline-none sm:text-2xl"
-          autoComplete="off"
-          spellCheck="false"
-          {...register("title")}
-        />
+          <input
+            type="text"
+            placeholder="Note Title"
+            className="bg-base-300 w-full resize-none text-2xl outline-none sm:text-3xl"
+            autoComplete="off"
+            spellCheck="false"
+            disabled={isMutating}
+            {...register("title")}
+          />
+        </div>
         {errors.title && (
           <p className="text-error mt-2">{errors.title.message}</p>
         )}
@@ -75,10 +119,10 @@ const UpdateNoteForm = ({ note }: { note: Note }) => {
           autoComplete="off"
           spellCheck="false"
           placeholder="Note Content"
-          //defaultValue={note.content}
           minRows={1}
           className="bg-base-300 mt-3 w-full resize-none
           overflow-y-hidden text-base outline-none sm:text-xl"
+          disabled={isMutating}
           {...register("content")}
         />
         {errors.content && (
