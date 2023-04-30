@@ -121,7 +121,7 @@ const CreateFolderModal = ({
             </button>
             <button
               type="button"
-              className="btn-error btn"
+              className=" btn"
               onClick={() => setIsOpen(false)}
               disabled={isMutating}
             >
