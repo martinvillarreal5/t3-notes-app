@@ -81,7 +81,7 @@ const FolderTree = () => {
 
   return (
     <>
-      {status === "loading" && <p className="text-xl">Loading</p>}
+      {status === "loading" && <p className="py-1 pl-1 text-xl">Loading</p>}
       {status === "success" && (
         <Tree
           data={folderFamilyTree}
