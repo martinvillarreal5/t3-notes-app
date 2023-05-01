@@ -23,6 +23,7 @@ const DeleteNoteButton = ({
   const deleteNote = api.note.delete.useMutation({
     onSuccess: () => {
       if (folderId) {
+        setIsOpen(false);
         void ctx.folder.getById.invalidate({ folderId: folderId });
         void router.push(`/folders/${folderId}`);
         //void router.back();
@@ -40,7 +41,7 @@ const DeleteNoteButton = ({
         title="Delete this note"
         className="btn-square btn-sm btn"
         onClick={() => setIsOpen(true)}
-        disabled={disabled || deleteNote.isLoading || deleteNote.isSuccess}
+        disabled={disabled || deleteNote.isLoading}
       >
         <TrashIcon />
       </button>
