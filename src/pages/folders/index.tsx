@@ -9,12 +9,11 @@ import CreateNoteModal from "~/components/notes/createNoteModal";
 
 import {
   FolderPlus as FolderPlusIcon,
-  //Home as HomeIcon,
   FilePlus as FilePlusIcon,
 } from "lucide-react";
-import FoldersGridContainer from "~/components/folders/foldersGridContainer";
 import NotesGridContainer from "~/components/notes/notesGridContainer";
 import { useRouter } from "next/router";
+import RootFoldersGridContainer from "~/components/folders/rootFoldersGridContainer";
 
 const Folders: NextPage = () => {
   const router = useRouter();
@@ -78,7 +77,7 @@ const Folders: NextPage = () => {
             </>
           )}
         </div>
-        <FoldersGridContainer dataStatus={foldersStatus} folders={folders} />
+        <RootFoldersGridContainer />
         <div className="divider my-1 sm:my-2"></div>
         {/*Check if adheres to https://www.w3.org/TR/wai-aria-1.2/#separator*/}
         <NotesGridContainer dataStatus={notesStatus} notes={notes} />
