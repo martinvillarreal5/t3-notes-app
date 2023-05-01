@@ -11,10 +11,10 @@ const NotesGridContainer = ({
   return (
     <div className="grow">
       {dataStatus === "loading" && (
-        <p className="py-4 text-2xl ">Loading Notes</p>
+        <p className="pb-1  text-sm ">Loading Notes</p>
       )}
       {dataStatus === "error" && (
-        <p className="text-error py-4 text-2xl ">
+        <p className="text-error pb-1  text-sm ">
           An error ocurred fetching your notes
         </p>
       )}

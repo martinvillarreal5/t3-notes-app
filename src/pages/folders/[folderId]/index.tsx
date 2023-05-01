@@ -1,13 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import {
   FolderPlus as FolderPlusIcon,
   FilePlus as FilePlusIcon,
-  Trash2 as TrashIcon,
 } from "lucide-react";
 import Layout from "~/components/layout/layout";
 import CreateFolderModal from "~/components/folders/createFolderModal";
@@ -15,13 +14,22 @@ import CreateNoteModal from "~/components/notes/createNoteModal";
 import FoldersGridContainer from "~/components/folders/foldersGridContainer";
 import NotesGridContainer from "~/components/notes/notesGridContainer";
 import FolderBreadcrumbs from "~/components/folders/folderBreadcrumbs";
+import DeleteFolderButton from "~/components/folders/deleteFolderButton";
 
 const Folder: NextPage = () => {
-  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
-  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const router = useRouter();
   const { folderId } = router.query as { folderId: string }; //TODO Find a better way?
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status: sessionStatus } = useSession();
+
+  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      console.log(sessionStatus);
+      void router.push("/signin");
+    }
+  }, [router, sessionStatus]);
 
   const { data: folder, status } = api.folder.getById.useQuery(
     { folderId: folderId },
@@ -29,29 +37,6 @@ const Folder: NextPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   );
-
-  const ctx = api.useContext();
-
-  const parentFolderId = folder?.parentFolderId;
-
-  const deleteFolder = api.folder.delete.useMutation({
-    onSuccess: () => {
-      void ctx.folder.getFoldersTree.invalidate();
-      if (parentFolderId) {
-        void ctx.folder.getById.invalidate({ folderId: parentFolderId });
-        void router.push(`/folders/${parentFolderId}`);
-      } else {
-        void router.push(`/folders/`);
-        void ctx.folder.getRootFolders.invalidate();
-      }
-    },
-  });
-
-  const deleteFolderHandler = (deleteId: string) => {
-    deleteFolder.mutate({
-      id: deleteId,
-    });
-  };
 
   return (
     <>
@@ -97,14 +82,11 @@ const Folder: NextPage = () => {
                 folderId={folder.id}
                 folderTitle={folder.title}
               />
-              <button
-                title="Delete this Folder"
-                className="btn-square btn-sm btn"
-                onClick={() => deleteFolderHandler(folder.id)}
-                //TODO open confirmation modal
-              >
-                <TrashIcon />
-              </button>
+              <DeleteFolderButton
+                folderId={folder.id}
+                folderTitle={folder.title}
+                parentFolderId={folder.parentFolderId}
+              />
             </>
           )}
         </div>

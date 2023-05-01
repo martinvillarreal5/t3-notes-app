@@ -21,6 +21,7 @@ next-env.d.ts
 /build
 
 # misc
+unused
 .DS_Store
 *.pem
 

@@ -11,10 +11,10 @@ const FoldersGridContainer = ({
   return (
     <>
       {dataStatus === "loading" && (
-        <p className="py-4 text-2xl ">Loading Folders</p>
+        <p className="mt-2 h-10 text-sm sm:h-12 lg:h-14">Loading Folders</p>
       )}
       {dataStatus === "error" && (
-        <p className="text-error py-4 text-2xl">
+        <p className="text-error mt-2 h-10 text-sm sm:h-12 lg:h-14">
           An error ocurred fetching your folders
         </p>
       )}
@@ -22,7 +22,9 @@ const FoldersGridContainer = ({
         (folders && folders.length > 0 ? (
           <FoldersGrid folders={folders} />
         ) : (
-          <p className=" text-sm">You dont have any folder yet.</p>
+          <p className="mt-2 h-10 text-sm sm:h-12 lg:h-14">
+            You dont have any folder yet.
+          </p>
         ))}
     </>
   );

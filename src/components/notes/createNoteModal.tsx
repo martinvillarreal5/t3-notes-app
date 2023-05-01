@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "~/utils/api";
-import Modal from "../ui/headlessUIModal";
+import { Modal, ModalDescription, ModalPanel, ModalTitle } from "../ui/modal";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
@@ -35,38 +35,38 @@ const CreateNoteModal = ({
     });
   };
   return (
-    <Modal
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      title="Create Note"
-      description={
-        folderTitle
-          ? `Add a new note in the "${folderTitle}" folder to your account.`
-          : "Add a new note to your account."
-      }
-    >
-      <form onSubmit={handleSubmit}>
-        <textarea
-          name="noteContent"
-          className=" textarea-bordered textarea mt-2.5 h-80 w-full"
-          placeholder="Note Content"
-          autoComplete="off"
-          value={noteContent}
-          onChange={(e) => setNoteContent(e.target.value)}
-        />
-        <div className="modal-action gap-2">
-          <button type="submit" className="btn-success btn">
-            Save
-          </button>
-          <button
-            type="button"
-            className="btn-error btn"
-            onClick={() => setIsOpen(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <ModalPanel>
+        <ModalTitle>Create Note</ModalTitle>
+        <ModalDescription>
+          {folderTitle
+            ? `Add a new note in the "${folderTitle}" folder to your account.`
+            : "Add a new note to your account."}
+        </ModalDescription>
+
+        <form onSubmit={handleSubmit}>
+          <textarea
+            name="noteContent"
+            className=" textarea-bordered textarea mt-2.5 h-80 w-full"
+            placeholder="Note Content"
+            autoComplete="off"
+            value={noteContent}
+            onChange={(e) => setNoteContent(e.target.value)}
+          />
+          <div className="modal-action gap-2">
+            <button type="submit" className="btn-success btn">
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn-error btn"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </ModalPanel>
     </Modal>
   );
 };
