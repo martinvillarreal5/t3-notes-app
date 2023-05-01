@@ -23,6 +23,7 @@ const DeleteFolderButton = ({
   const deleteFolder = api.folder.delete.useMutation({
     onSuccess: () => {
       void ctx.folder.getFoldersTree.invalidate();
+      void setIsOpen(false);
       if (parentFolderId) {
         void ctx.folder.getById.invalidate({ folderId: parentFolderId });
         void router.push(`/folders/${parentFolderId}`);
@@ -40,7 +41,9 @@ const DeleteFolderButton = ({
         title="Delete this Folder"
         className="btn-square btn-sm btn"
         onClick={() => setIsOpen(true)}
-        disabled={disabled || deleteFolder.isLoading || deleteFolder.isSuccess}
+        disabled={
+          disabled || deleteFolder.isLoading /* || deleteFolder.isSuccess */
+        }
         //TODO open confirmation modal
       >
         <TrashIcon />
