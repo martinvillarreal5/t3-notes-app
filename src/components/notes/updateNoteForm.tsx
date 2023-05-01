@@ -58,7 +58,11 @@ const UpdateNoteForm = ({ note }: UpdateNoteFormProps) => {
     onSettled: () => {
       void setIsMutating(false);
       void ctx.note.getById.invalidate({ noteId: note.id });
-      console.log("settled");
+      if (note.folderId) {
+        void ctx.folder.getById.invalidate({ folderId: note.folderId });
+      } else {
+        void ctx.note.getRootNotes.invalidate();
+      }
     },
   });
   const onSubmit = (data: FormData) => {
