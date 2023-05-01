@@ -6,7 +6,6 @@ import Layout from "~/components/layout/layout";
 import { api } from "~/utils/api";
 import { useEffect } from "react";
 import UpdateNoteForm from "~/components/notes/updateNoteForm";
-import DeleteNoteButton from "~/components/notes/deleteNoteButton";
 
 const Note: NextPage = () => {
   const router = useRouter();
@@ -25,7 +24,6 @@ const Note: NextPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   );
-
   return (
     <>
       <Head>
@@ -33,16 +31,10 @@ const Note: NextPage = () => {
       </Head>
       <Layout>
         {status === "loading" && (
-          <h2 className=" text-2xl sm:text-3xl">Loading</h2>
+          <h2 className=" text-xl sm:text-2xl">Loading</h2>
         )}
         {status === "success" && (
           <>
-            <div className="flex flex-col">
-              <div className="flex flex-row items-center gap-3">
-                <DeleteNoteButton noteId={note.id} folderId={note.folderId} />
-              </div>
-            </div>
-
             <UpdateNoteForm note={note} />
           </>
         )}
