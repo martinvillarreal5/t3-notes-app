@@ -84,6 +84,7 @@ const Folder: NextPage = () => {
               />
               <DeleteFolderButton
                 folderId={folder.id}
+                folderTitle={folder.title}
                 parentFolderId={folder.parentFolderId}
               />
             </>
