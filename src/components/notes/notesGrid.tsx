@@ -19,24 +19,32 @@ const NotesGrid = ({ notes }: notesGridProps) => {
         2xl:grid-cols-4"
       >
         {notes.map((note) => (
-          <Link
-            //sm:h-72 md:h-96 h-60
-            className="bg-neutral pointer-events-auto h-[11rem] p-2
-            shadow-xl md:h-[13rem]
-            "
-            href={`/notes/${note.id}`}
-            key={note.id}
-          >
-            <p
-              //overflow-hidden  text-ellipsis
-              className=" line-clamp-[8]
-            break-words text-sm md:text-base
-            "
-              style={{ whiteSpace: "pre-wrap" }}
-            >
-              {note.content}
-            </p>
-          </Link>
+          <>
+            <div className="flex flex-col " key={note.id}>
+              <Link
+                //sm:h-72 md:h-96 h-60
+                className="bg-neutral pointer-events-auto h-[11rem] rounded-md
+                p-2 shadow-xl md:h-[13rem]
+                "
+                href={`/notes/${note.id}`}
+              >
+                <p
+                  //overflow-hidden  text-ellipsis
+                  className=" line-clamp-[8]
+                  break-words text-sm md:text-base
+                  "
+                  style={{ whiteSpace: "pre-wrap" }}
+                >
+                  {note.content}
+                </p>
+              </Link>
+              {note.title && (
+                <div className="flex w-full justify-center">
+                  <p>{note.title}</p>
+                </div>
+              )}
+            </div>
+          </>
         ))}
       </div>
     </div>
