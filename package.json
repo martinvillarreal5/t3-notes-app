@@ -35,6 +35,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@t3-oss/env-nextjs": "^0.2.2",
     "@types/eslint": "^8.37.0",
     "@types/node": "^18.16.4",
     "@types/prettier": "^2.7.2",
