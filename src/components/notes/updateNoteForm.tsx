@@ -8,7 +8,7 @@ import { Save as SaveIcon } from "lucide-react";
 import { api } from "~/utils/api";
 import DeleteNoteButton from "~/components/notes/deleteNoteButton";
 
-const noteFormSchema = z.object({
+const updateNoteSchema = z.object({
   title: z
     .string()
     .max(30, { message: "Note title must be 30 characters long or less." })
@@ -18,11 +18,10 @@ const noteFormSchema = z.object({
     .min(1, { message: "Note content is required." })
     .max(65535, {
       message: "Note content must be 65,535 characters long or less.",
-    })
-    .optional(),
+    }),
 });
 
-type FormData = z.infer<typeof noteFormSchema>;
+type FormData = z.infer<typeof updateNoteSchema>;
 
 type UpdateNoteFormProps = {
   note: Note;
@@ -37,10 +36,10 @@ const UpdateNoteForm = ({ note }: UpdateNoteFormProps) => {
     register,
     handleSubmit,
     reset: resetForm,
-    formState: { errors, isValid, dirtyFields, isDirty },
+    formState: { errors, isValid, isDirty },
   } = useForm<FormData>({
     mode: "onChange",
-    resolver: zodResolver(noteFormSchema),
+    resolver: zodResolver(updateNoteSchema),
     defaultValues: defaultValues,
   });
   const [isServerError, setIsServerError] = useState(false);
@@ -53,7 +52,7 @@ const UpdateNoteForm = ({ note }: UpdateNoteFormProps) => {
     },
     onError: () => {
       void setIsServerError(true); //TODO Trow Toast
-      void resetForm();
+      //void resetForm();
     },
     onSettled: () => {
       void setIsMutating(false);
@@ -67,21 +66,17 @@ const UpdateNoteForm = ({ note }: UpdateNoteFormProps) => {
   });
   const onSubmit = (data: FormData) => {
     if (isDirty) {
-      type UpdateData = FormData & { noteId: string };
-      const updateData: UpdateData = {
+      updateNote.mutate({
         noteId: note.id,
-      };
-
-      const dirtyFieldsArray = Object.keys(dirtyFields);
-      dirtyFieldsArray.forEach((key) => {
-        updateData[key as keyof FormData] = data[key as keyof FormData];
+        content:
+          data.content != defaultValues.content ? data.content : undefined,
+        title:
+          data.title && data.title != defaultValues.title
+            ? data.title
+            : undefined,
       });
-      updateNote.mutate({ ...updateData });
       resetForm({ ...data });
-    } else console.log("No fields where modified"); //TODO show toast
-    resetForm(undefined, {
-      keepValues: true,
-    });
+    }
   };
 
   return (
