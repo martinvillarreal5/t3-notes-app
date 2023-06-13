@@ -22,7 +22,7 @@ const FolderArrowButton = ({ node }: { node: NodeApi<Data> }) => {
       return (
         <button
           title="close folder"
-          className="btn btn-xs btn-circle btn-ghost"
+          className="btn-ghost btn-xs btn-circle btn"
           onClick={() => node.isInternal && node.toggle()}
         >
           <ChevronDownIcon />
@@ -32,7 +32,7 @@ const FolderArrowButton = ({ node }: { node: NodeApi<Data> }) => {
     return (
       <button
         title="open folder"
-        className="btn btn-xs btn-circle btn-ghost"
+        className="btn-ghost btn-xs btn-circle btn"
         onClick={() => node.isInternal && node.toggle()}
       >
         <ChevronRightIcon />
@@ -52,7 +52,7 @@ const Node = ({ node, style }: NodeRendererProps<any>) => {
     <>
       <div
         style={style}
-        className="flex h-full flex-row flex-nowrap items-center gap-1 truncate "
+        className="flex h-full w-full flex-row flex-nowrap items-center gap-1 truncate "
       >
         <FolderArrowButton node={node} />
         <div className="h-6 w-6">
@@ -63,7 +63,7 @@ const Node = ({ node, style }: NodeRendererProps<any>) => {
           )}
         </div>
 
-        <Link href={`/folders/${data.id}`} className="truncate text-xl">
+        <Link href={`/folders/${data.id}`} className="grow truncate text-xl">
           {data.title}
         </Link>
       </div>
@@ -88,8 +88,6 @@ const FolderTree = () => {
           rowHeight={34}
           width={248}
           disableMultiSelection
-          /* selection={folderId}
-          selectionFollowsFocus */
         >
           {Node}
         </Tree>
