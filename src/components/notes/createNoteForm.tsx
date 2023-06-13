@@ -23,7 +23,7 @@ const createNoteSchema = z.object({
 type FormData = z.infer<typeof createNoteSchema>;
 
 type CreateNoteFormProps = {
-  folderId: string;
+  folderId?: string;
 };
 
 const CreateNoteForm = ({ folderId }: CreateNoteFormProps) => {
@@ -34,14 +34,12 @@ const CreateNoteForm = ({ folderId }: CreateNoteFormProps) => {
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormData>({
     mode: "onChange",
     resolver: zodResolver(createNoteSchema),
     defaultValues: defaultValues,
   });
-  const [isServerError, setIsServerError] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
   const ctx = api.useContext();
   const router = useRouter();
@@ -51,23 +49,21 @@ const CreateNoteForm = ({ folderId }: CreateNoteFormProps) => {
     },
     onError: () => {
       void setIsMutating(false);
-      setIsServerError(true); //TODO throw toast
+      //TODO throw toast
     },
-    /* onSettled: () => {
-      void setIsMutating(false);
-    }, */
     onSuccess: () => {
-      //void reset();
       folderId
         ? void ctx.folder.getById.invalidate({ folderId: folderId })
         : void ctx.note.getRootNotes.invalidate();
-      void router.push(`/folders/${folderId}`);
+      folderId
+        ? void router.push(`/folders/${folderId}`)
+        : void router.push(`/folders`);
     },
   });
 
   const onSubmit = (data: FormData) => {
     createNote.mutate({
-      folderId: folderId,
+      folderId: folderId || null,
       content: data.content,
       title: data.title || undefined,
     });
